@@ -7,8 +7,10 @@ This repository provides the implementation of **DB-GAF**, a novel graph-based d
 Link to the paper: [DB-GAF Paper](#) (Add the link to your paper here)
 
 
+## Framework
+![Framework](images/framework.jpg)
 ## Model Architecture
-![DB-GAF Architecture](images/db-gaf_architecture.png)
+![DB-GAF Architecture](images/db-gaf.jpg)
 
 ## DataSets
 
