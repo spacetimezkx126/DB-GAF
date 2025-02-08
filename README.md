@@ -27,5 +27,9 @@ python dual_branch_contrast_graph.py --exp_name db_contrast_graph --dataset leca
 
 For mudule IV:
 
-python basic_graph_models.py --exp_name basic_graph_eagatv2_efwf --model EAGATv2-EFWF --dataset lecardv2 --split_file 2_l --choose in 
+python basic_graph_models.py --exp_name basic_graph_eagatv2_efwf --model EAGATv2-EFWF --dataset lecardv2 --drop_mode False --drop_type few --attribute_file example.json 
+
+drop mode:
+
+python basic_graph_models.py --exp_name basic_graph_eagatv2_efwf --model EAGATv2-EFWF --dataset lecardv2 --drop_mode True --drop_type few --attribute_file example.json --attribute_file ./split_files/v2_2_u.json
 
