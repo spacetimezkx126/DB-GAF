@@ -43,6 +43,7 @@ We also provide files for evaluation and visualization of the DB-GAF method.
 - metric.py is used for evaluation.
 - ./process/view_changement.py is used for visualizing instability and the variation trend of MAP values.
 
+We have provided the results of our experiments in the ./experiment folder, along with two checkpoints in the ./checkpoints folder for reproduction.
 
 ## Note
 The experimental results in this paper for the language model part are based on the SAILER pre-trained model, as described in Li H, Ai Q, Chen J, et al. (2023), "SAILER: Structure-Aware Pre-trained Language Model for Legal Case Retrieval", Proceedings of the 46th International ACM SIGIR Conference on Research and Development in Information Retrieval, pp. 1035-1044. Please download the pre-trained weights and modify the corresponding paths in the code before use.
