@@ -83,29 +83,55 @@ def load_file():
 label_dic = load_file()
 
 parser = argparse.ArgumentParser(description = 'lcr')
-parser.add_argument('--exp_name', type = str, default = 'lecardv2', 
+parser.add_argument('--exp_name', type = str, default = 'v2_in_2_u_pe', 
                     help = 'dataset_name')  
+parser.add_argument('--single_file', type = str, default = False, 
+                    help = 'whether testing a single file')  
+parser.add_argument('--file', type = str, default = "./results/result.json", 
+                    help = 'whether testing a single file')  
 args = parser.parse_args()
-exp_name = args.exp_name
-for n in range(10):
-    print("times:",n)
-    for i in range(10):
-        print("epoch:",i)
-        # with open("/home/zhaokx/DB-GAF/result.json", "r")as f:
-        with open("/home/zhaokx/DB-GAF/experiment/"+exp_name+"/times"+str(n)+"/"+str(i)+"result.json", "r")as f:
+
+if __name__ == '__main__':
+    if args.single_file is False:
+        exp_name = args.exp_name
+        for n in range(10):
+            print("times:",n)
+            for i in range(10):
+                print("epoch:",i)
+                with open("./experiment/"+exp_name+"/times"+str(n)+"/"+str(i)+"result.json", "r")as f:
+                    result_all = json.load(f)
+                    f.close()
+                for key in result_all:
+                    del_val = []
+                    for vals in result_all[key]:
+                        if key in label_dic and vals not in label_dic[key]:
+                            del_val.append(vals)
+                    for vals in del_val:
+                        result_all[key].pop(vals)
+                print(MAP(result_all,label_dic))
+                print(Precision_k(result_all,label_dic,3))
+                print(NDCG_k(result_all,label_dic,3))
+                print(NDCG_k(result_all,label_dic,5))
+                print(NDCG_k(result_all,label_dic,10))
+    else:
+        
+        file = args.file
+        print(file)
+        with open(file,"r") as f:
             result_all = json.load(f)
             f.close()
         for key in result_all:
-            if key!='2403':
-                del_val = []
-                for vals in result_all[key]:
-                    if key in label_dic and vals not in label_dic[key]:
-                        del_val.append(vals)
-                for vals in del_val:
-                    result_all[key].pop(vals)
+            del_val = []
+            for vals in result_all[key]:
+                if key in label_dic and vals not in label_dic[key]:
+                    del_val.append(vals)
+            for vals in del_val:
+                result_all[key].pop(vals)
         print(MAP(result_all,label_dic))
         print(Precision_k(result_all,label_dic,3))
         print(NDCG_k(result_all,label_dic,3))
         print(NDCG_k(result_all,label_dic,5))
         print(NDCG_k(result_all,label_dic,10))
+
+
 

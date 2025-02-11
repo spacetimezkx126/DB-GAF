@@ -60,6 +60,9 @@ parser.add_argument('--epochs', type = str, default = 10,
                     help = 'epochs')
 args = parser.parse_args()
 
+tokenizer = AutoTokenizer.from_pretrained("./models--CSHaitao--SAILER_zh")
+sailer_model = AutoModel.from_pretrained("./models--CSHaitao--SAILER_zh").to(device)
+
 def encode_text(text, length=64):
     with torch.no_grad():
         inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=length).to(device)
@@ -78,7 +81,7 @@ def load_data_kfold(datas, k_folds=5, batch_size=1, part_few = None):
     case_dataset = CaseDataset(datas, dataset = 'lecard', part_few = part_few)
     dataset_size = len(case_dataset)
     kf = KFold(n_splits=k_folds, shuffle=False)
-    kfold_loaders = []  # 存储每一折的 DataLoader
+    kfold_loaders = [] 
 
     for train_indices, val_indices in kf.split(range(dataset_size)):
         train_dataset = Subset(case_dataset, train_indices)
@@ -109,9 +112,6 @@ def load_data(datas,train_test, part_few = None):
     return train_loader,val_loader
 
 def ranking_loss_with_metrics(ranking_results, rels, k=3, margin=0.1):
-    """
-    结合MAP、NDCG和Precision@k来构造损失函数
-    """
     
     # NDCG
     def NDCG_at_k(ranking_results, rels, k):
@@ -180,19 +180,15 @@ def ranking_loss_with_metrics(ranking_results, rels, k=3, margin=0.1):
         Precision_k /= (len(ranking_results.keys()) - count)
         return Precision_k
 
-    # 计算各个指标
     NDCG = NDCG_at_k(ranking_results, rels, k)
     MAP_score = MAP(ranking_results, rels)
     Precision_score = Precision_at_k(ranking_results, rels, k)
-    # print(NDCG,MAP_score,Precision_score,ranking_results)
     NDCG1 = NDCG_at_k(ranking_results, rels, 5)
     NDCG2 = NDCG_at_k(ranking_results, rels, 10)
-    # 定义损失（较高的NDCG和MAP，较低的Precision都应该增加损失）
     loss = (1 - NDCG) + (1 - MAP_score) + (1 - Precision_score) + (1-NDCG1) + (1-NDCG2)
     return loss
 
 def margin_ranking_loss(real_scores, fake_scores, margin=0.1):
-    # 生成所有可能的真实得分与假得分组合
     real_expanded = real_scores.unsqueeze(1)  # [N, 1]
     fake_expanded = fake_scores.unsqueeze(0)  # [1, M]
 
@@ -499,6 +495,10 @@ class CaseDataset(Dataset):
             texts.append(texts_content)
             self.fulltext[key] = texts_content
         
+        with open("./dataset/lecardv2_contrast_graph.pkl",'rb')as f:
+            # self.cached_data = pkl.load(f)
+        self.cached_data = []
+        self.cache_all_data()
     def __len__(self):
         return len(self.data_list)
 
@@ -508,14 +508,14 @@ class CaseDataset(Dataset):
             merged_graph = self.merge_graphs(graph_list)
             data = from_networkx(merged_graph)
             data.x = torch.zeros(len(merged_graph.nodes),768)
-            case_mask = torch.tensor([bool(n!='crime1') for n in data.node_type])  # 找到 case 节点
+            case_mask = torch.tensor([bool(n!='crime1') for n in data.node_type])  
             data.x[case_mask] = encode_text([merged_graph.nodes[n]["texts"] for n in merged_graph.nodes if merged_graph.nodes[n]["node_type"] != "crime1"]).detach().cpu()
             case_mask = torch.tensor([bool(n=='crime1') for n in data.node_type]) 
             data.x[case_mask] = encode_text([merged_graph.nodes[n]["texts"] for n in merged_graph.nodes if merged_graph.nodes[n]["node_type"] == "crime1"],length=300).detach().cpu()
             data.edge_attr = encode_text([merged_graph[u][v]["edge_attr"] for u, v in merged_graph.edges]).detach().cpu()
             data.crime_name = [merged_graph[u][v]["crime_name"] for u, v in merged_graph.edges]
             self.cached_data.append(data)
-    
+        save_to_pkl(self.cached_data, 'lecardv2_contrast_graph.pkl')
     def __getitem__(self, idx):
         return self.cached_data[idx].to(self.device)
     
@@ -553,7 +553,7 @@ class CaseDataset(Dataset):
                     crime_node1 = crime_name
                     if "经过：" in origin_text[crime_name]:
                         G.add_node(crime_node1, **default_node_attributes, node_type="crime1",case_number=case['案件编号'],name=crime_name+":"+origin_text[crime_name])
-                        G.add_edge(case_id, crime_node1, edge_type="has_crime1",crime_name=crime_name,important=0)
+                        G.add_edge(case_id, crime_node1, edge_type="has_crime1",crime_name=crime_name)
                         G.nodes[crime_node1]["texts"] = crime_name+":"+origin_text[crime_name]
                 
                 crime_node_branch1 = f"crime_important_{crime_name}_{case['案件编号']}"
@@ -585,17 +585,12 @@ class CaseDataset(Dataset):
         return G
 
     def merge_graphs(self, graph_list):
-        # 创建一个空图用于合并
         merged_graph = nx.DiGraph()
 
-        # 用于重编号，避免节点 ID 冲突
         offset = 0
         for graph in graph_list:
-            # 重新编号节点
-            # print(graph)
             mapping = {n: f"{n}_{offset}" for n in graph.nodes()}
             relabeled_graph = nx.relabel_nodes(graph, mapping)
-            # 合并到总图中
             merged_graph = nx.compose(merged_graph, relabeled_graph)
             offset += 1
 
@@ -621,7 +616,7 @@ class EdgeWeighted(nn.Module):
 
 class DB_GAF(nn.Module):
     def __init__(self, in_channels, hidden_channels, out_channels, num_heads=1):
-        super(GATv2Model, self).__init__()
+        super(DB_GAF, self).__init__()
 
         self.graph_model_l1 = EAGATv2_EWA(in_channels, hidden_channels, heads = 1, edge_dim = 768)
         self.graph_model_l2 = EAGATv2_EWA(in_channels, hidden_channels, heads = 1, edge_dim = 768)
@@ -644,21 +639,21 @@ class DB_GAF(nn.Module):
 
         i = 0
         for etype in edge_type:
-            attention.append([crime_name[i],etype,edge_weight[i].detach().cpu().alpha[i][0].detach().cpu().item()])
+            attention.append([crime_name[i],etype,edge_weight[i].detach().cpu(),alpha[i][0].detach().cpu().item()])
             i += 1
         
         edge_weight2 = self.edge_weight2(edge_attr)
 
-        x2,(adj, alpha)= self.graph_model_l2(x1, filtered_edge_index,filtered_edge_attr,edge_weight=[edge_weight2,self.weight],return_attention_weights=True)
+        x2,(adj, alpha)= self.graph_model_l2(x1, edge_index,edge_attr,edge_weight = edge_weight2, return_attention_weights=True)
         x2 = F.relu(x2+x1)
 
         i = 0
         for etype in edge_type:
-            attention2.append([crime_name[i],etype,edge_weight2[i].detach().cpu().alpha[i][0].detach().cpu().item()])
+            attention2.append([crime_name[i],etype,edge_weight2[i].detach().cpu(),alpha[i][0].detach().cpu().item()])
             i += 1
         
         edge_weight3 = self.edge_weight3(edge_attr)
-        x3, (adj, alpha) = self.gat3(x2,edge_index,edge_attr,edge_weight = edge_weight3,return_attention_weights=True)
+        x3, (adj, alpha) = self.graph_model_l3(x2,edge_index,edge_attr,edge_weight = edge_weight3,return_attention_weights=True)
         x3 = F.relu(x3+x2)
 
         i = 0
@@ -670,23 +665,19 @@ class DB_GAF(nn.Module):
 
 def load_data(datas,train_test):
     train_ratio = 0.8
-    case_dataset = CaseDataset(datas)
+    case_dataset = CaseDataset(datas, dataset = 'lecardv2')
     train_indices = []
     val_indices = []
-
-    # 遍历 cached_data 中的每个数据项，并根据 case_number 将其分配到训练集或验证集
     for idx, case_batch in enumerate(case_dataset.cached_data):
-        case_number = case_batch.case_number  # 假设 case_number 是每个案例的标识符
+        case_number = case_batch.case_number 
         if int(case_number[0]) in train_test['test']:
             val_indices.append(idx)
         else:
             train_indices.append(idx)
-    
-    # 创建训练集和验证集的 Subset
+
     train_dataset = Subset(case_dataset, train_indices)
     val_dataset = Subset(case_dataset, val_indices)
 
-    # 创建 DataLoader
     train_loader = DataLoader(train_dataset, batch_size=1, collate_fn=collate_fn)
     val_loader = DataLoader(val_dataset, batch_size=1, collate_fn=collate_fn)
     return train_loader,val_loader
@@ -719,10 +710,14 @@ if __name__ == '__main__':
         train_test = json.load(f)
         f.close()
     exp_name = args.exp_name
+    
     if args.dataset == 'lecardv2':
+        label_dic = json.load(open("./labels/labelv2.json","r"))
         train_test_v2 = {"train": train_test["lecardv2"]["train"],"test": train_test["lecardv2"]["test"]} 
         train_loader, val_loader = load_data(datas, train_test_v2)
+        loss_min = torch.tensor(10000).to(device)
         for n in range(times):
+            result_all = {}
             print("times:",n)
             model = DB_GAF(in_channels=768, hidden_channels=768, out_channels=768)
             model.to(device)
@@ -733,11 +728,18 @@ if __name__ == '__main__':
                 os.mkdir("./experiment/"+exp_name+"/times"+str(n))
             loss_all_train = []
             loss_all_test = []
+            attention_train = {}
+            attention_val = {}
+            attention_train2 = {}
+            attention_val2 = {}
+            attention_train3 = {}
+            attention_val3 = {}
             for epoch in range(epochs):
                 print("epoch:",epoch)
                 model.train()
                 for batch in train_loader:
                     map1 = {}
+                    result = {}
                     sim_list = []
                     sim_list1 = []
                     total_loss = 0
@@ -749,86 +751,169 @@ if __name__ == '__main__':
                     sim_other = []
 
                     data = batch[0]
-                    out = model(data)
+                    output = model(data)
+                    out, attention, attention2, attention3 = output[0], output[1], output[2], output[3]
+                    for attn in attention:
+                        if (attn[0],attn[1]) not in attention_train:
+                            attention_train[(attn[0],attn[1])] = []
+                            # attention_train_gat[(attn[0],attn[1])] = []
+                        attention_train[(attn[0],attn[1])].append(attn[2])
+                        # attention_train_gat[(attn[0],attn[1])].append(attn[3])
+                    for attn in attention2:
+                        if (attn[0],attn[1]) not in attention_train2:
+                            attention_train2[(attn[0],attn[1])] = []
+                            # attention_train2_gat[(attn[0],attn[1])] = []
+                        attention_train2[(attn[0],attn[1])].append(attn[2])
+                        # attention_train2_gat[(attn[0],attn[1])].append(attn[3])
+                    for attn in attention3:
+                        if (attn[0],attn[1]) not in attention_train3:
+                            attention_train3[(attn[0],attn[1])] = []
+                            # attention_train3_gat[(attn[0],attn[1])] = []
+                        attention_train3[(attn[0],attn[1])].append(attn[2])
+                        # attention_train3_gat[(attn[0],attn[1])].append(attn[3])
+                    
                     case_numbers = data.case_number 
                     case_query = case_numbers[0]
 
                     out_temp = out[0]
-                    case_numbers1 = list(filter(lambda x: x != case_query, case_numbers))
-                    unique_cases = list(set(case_numbers1))
+                    unique_cases = []
+                    j = 0
+                    for cn in case_numbers:
+                        if data.node_type[j] =="case" and cn !=case_query:
+                            unique_cases.append(cn)
+                        j+=1
 
-                    first_indices = []
+                    first_indices =[]
                     for i in range(len(unique_cases)):
                         for j in range(len(case_numbers)):
                             if case_numbers[j] == unique_cases[i] and data.node_type[j] =="case":
                                 first_indices.append(j)
                                 break
-
                     first_node_features = torch.stack([out[i] for i in first_indices])
                     out1 = first_node_features
-
-                    sims = F.cosine_similarity(out_temp.unsqueeze(0), out1, dim=1)
-
                     sim_list = []
-                    sim_2 = []
-                    sim_3 = []
+                    sim_list1 = []
                     sim_other = []
-                    sim_other2 = []
+                    sim_3 = []
+                    sims_all = F.cosine_similarity(out_temp.unsqueeze(0), out1, dim=1)
+                    for i in range(len(first_indices)):
+                        sim = sims_all[i]
+                        if unique_cases[i] in label[case_query]:
+                            sim_list.append([sim,unique_cases[i],label[case_query][unique_cases[i]]])
+                            sim_list1.append(sim)
+                            if label[case_query][unique_cases[i]] in [2,3]:
+                                sim_3.append(sim)
+                            else:
+                                sim_other.append(sim)
+                        else:
+                            sim_other.append(sim)
+                    j+=1
+                    loss1 = 0
 
-                    unique_case_labels = torch.tensor([label[case_query].get(case, 0) for case in unique_cases], device=sims.device)
-
-                    sim_list1 = sims.tolist()
-                    for i, sim in enumerate(sims):
-                        sim_entry = [sim, unique_cases[i], unique_case_labels[i].item()]
-                        sim_list.append(sim_entry)
-
-                    sim_2_mask = unique_case_labels >= 2
-                    sim_3_mask = unique_case_labels == 3
-                    sim_other_mask = ~sim_2_mask
-                    sim_other2_mask = ~sim_3_mask
-
-                    if sim_2_mask.any():
-                        sim_2 = sims[sim_2_mask]
-                    if sim_3_mask.any():
-                        sim_3 = sims[sim_3_mask]
-                    if sim_other_mask.any():
-                        sim_other = sims[sim_other_mask]
-                    if sim_other2_mask.any():
-                        sim_other2 = sims[sim_other2_mask]
-                    
-                    loss = 0
-                    result = {}
-                    sim_list.sort(key = lambda x : -x[0])
                     result[case_query]={}
+                    sim_list.sort(key = lambda x:-x[0])
                     for item in sim_list:
                         result[case_query][item[1]] = item[0].item()
-                        data_json = result
+
+                    data_json = result
                     for key in data_json:
                         map1[key] = []
                         del_val = []
                         for vals in data_json[key]:
-                            if key in label and vals not in label[key]:
+                            if key in label_dic and vals not in label_dic[key]:
                                 del_val.append(vals)
                             map1[key].append(int(vals))
+
                         for vals in del_val:
                             data_json[key].pop(vals)
-                    
-                    if len(sim_2)!=0 and len(sim_other)!=0:
-                        print(data_json)
-                        loss = margin_ranking_loss(sim_2,sim_other)+ranking_loss_with_metrics(data_json,label)
-                        loss.backward()
-                        print("loss_train:",j1,loss,case_query)
-                        loss_all_train.append(loss)
+                    if len(sim_3)!=0 and len(sim_other)!=0:
+                        loss1 = margin_ranking_loss(torch.stack(sim_3),torch.stack(sim_other))+ranking_loss_with_metrics(data_json,label_dic)
 
-                    sim_list.sort(key = lambda x:-x[0])
+                    case_name = data.name
+                    case_node_type = data.node_type
+
+                    query_import =  [
+                        idx for idx, (name, node_type, case_number) in enumerate(zip(case_name, case_node_type, case_numbers))
+                        if case_number ==case_query and name == "important" and node_type == "virtual"
+                    ][0]
+
+                    query_unimport = [
+                        idx for idx, (name, node_type, case_number) in enumerate(zip(case_name, case_node_type, case_numbers))
+                        if case_number ==case_query and name == "unimportant" and node_type == "virtual"
+                    ][0]
+
+                    out_query_import = out[query_import]
+                    out_query_unimport = out[query_unimport]
+                    important_virtual_indices = []
+                    for case in unique_cases:
+                        for idx, (name, node_type, case_number) in enumerate(zip(case_name, case_node_type, case_numbers)):
+                            if case_number == case and name == "important" and node_type == "virtual":
+                                important_virtual_indices.append(idx)
+                                break
+                    import_node_features = torch.stack([out[i] for i in important_virtual_indices])
+                    unimportant_virtual_indices = []
+                    for case in unique_cases:
+                        for idx, (name, node_type, case_number) in enumerate(zip(case_name, case_node_type, case_numbers)):
+                            if case_number == case and name == "unimportant" and node_type == "virtual":
+                                unimportant_virtual_indices.append(idx)
+                                break
+                    
+                    unimport_node_features = torch.stack([out[i] for i in unimportant_virtual_indices])
+                    sim_import = []
+                    sim_unimport = []
+                    sim_3_import = []
+                    sim_other_import = []
+                    sim_3_unimport = []
+                    sim_other_unimport = []
+                    sims_all1 =  F.cosine_similarity(out_query_import.unsqueeze(0),import_node_features,dim=1)
+                    sims_all2 =  F.cosine_similarity(out_query_unimport.unsqueeze(0),unimport_node_features,dim=1)
+                    for i in range(len(important_virtual_indices)):
+                        sim = sims_all1[i]
+                        sim_import.append(sim)
+                        if unique_cases[i] in label[case_query]:
+                            if label[case_query][unique_cases[i]] in [2,3]:
+                                sim_3_import.append(sim)
+                            else:
+                                sim_other_import.append(sim)
+                        else:
+                            sim_other_import.append(sim)
+                        sim = sims_all2[i]
+                        sim_unimport.append(sim)
+                        if unique_cases[i] in label[case_query]:
+                            if label[case_query][unique_cases[i]] in [2,3]:
+                                sim_3_unimport.append(sim)
+                            else:
+                                sim_other_unimport.append(sim)
+                        else:
+                            sim_other_unimport.append(sim)
+                    if len(sim_3_unimport)!=0 and len(sim_other_unimport)!=0:
+                        loss2 = margin_ranking_loss(torch.stack(sim_3_unimport),torch.stack(sim_other_unimport))
+                    if len(sim_3_import)!=0 and len(sim_other_import)!=0:
+                        loss3 = margin_ranking_loss(torch.stack(sim_3_import),torch.stack(sim_other_import))
+                    import_score = torch.stack(sim_import)
+                    unimport_score = torch.stack(sim_unimport)
+                    labels = torch.ones(import_score.size(), device=import_score.device)  # [N, M]
+
+                    # db_loss
+                    loss_fn = nn.MarginRankingLoss(margin=1)
+                    loss = loss_fn(import_score.flatten(), unimport_score.flatten(), labels.flatten())
+                    if len(sim_3_import)!=0 and len(sim_other_import)!=0:
+                        loss4 = loss1+loss3+loss2+loss
+                        print("losstr:",loss,loss1,loss2,loss3,loss4)
+                        loss_all_train.append(loss4)
+                        loss4.backward()
+                    else:
+                        print("losstr:",loss4)
+                        loss4 = loss
+                        sim_list.sort(key = lambda x:-x[0])
                     optimizer.step()
                     torch.cuda.empty_cache()
-                
                 print("train_loss_all",torch.mean(torch.stack(loss_all_train)))
                 print("val")
-                del out
+                del out, attention, attention2, attention3
                 model.eval()
-                loss_min = torch.tensor(10000).to(device)
+                result = {}
+                
                 j1 = 0
                 result = {}
                 with torch.no_grad():
@@ -843,7 +928,28 @@ if __name__ == '__main__':
                         temp = None
                         out_temp = None
                         data = batch[0]
-                        out = model(data)
+                        output = model(data)
+                        out, attention, attention2, attention3 = output[0], output[1], output[2], output[3]
+
+                        for attn in attention:
+                            if (attn[0],attn[1]) not in attention_val:
+                                attention_val[(attn[0],attn[1])] = []
+                                # attention_train_gat[(attn[0],attn[1])] = []
+                            attention_val[(attn[0],attn[1])].append(attn[2])
+                            # attention_train_gat[(attn[0],attn[1])].append(attn[3])
+                        for attn in attention2:
+                            if (attn[0],attn[1]) not in attention_val2:
+                                attention_val2[(attn[0],attn[1])] = []
+                                # attention_train2_gat[(attn[0],attn[1])] = []
+                            attention_val2[(attn[0],attn[1])].append(attn[2])
+                            # attention_train2_gat[(attn[0],attn[1])].append(attn[3])
+                        for attn in attention3:
+                            if (attn[0],attn[1]) not in attention_val3:
+                                attention_val3[(attn[0],attn[1])] = []
+                                # attention_train3_gat[(attn[0],attn[1])] = []
+                            attention_val3[(attn[0],attn[1])].append(attn[2])
+                            # attention_train3_gat[(attn[0],attn[1])].append(attn[3])
+                        
                         case_numbers = data.case_number 
                         case_query = case_numbers[0]
                         out_temp = out[0]
@@ -860,29 +966,24 @@ if __name__ == '__main__':
                         sim_list1 = []
                         sims = F.cosine_similarity(out_temp.unsqueeze(0), torch.stack(out1), dim=1)
 
-                        # 初始化结果列表
                         sim_list = []
                         sim_2 = []
                         sim_3 = []
                         sim_other = []
                         sim_other2 = []
 
-                        # 获取标签
                         unique_case_labels = torch.tensor([label[case_query].get(case, 0) for case in unique_cases], device=sims.device)
 
-                        # 根据标签分类
-                        sim_list1 = sims.tolist()  # 转为列表方便后续处理
+                        sim_list1 = sims.tolist() 
                         for i, sim in enumerate(sims):
                             sim_entry = [sim, unique_cases[i], unique_case_labels[i].item()]
                             sim_list.append(sim_entry)
 
-                        # 筛选符合条件的相似度
                         sim_2_mask = unique_case_labels >= 2
                         sim_3_mask = unique_case_labels == 3
                         sim_other_mask = ~sim_2_mask
                         sim_other2_mask = ~sim_3_mask
 
-                        # 使用布尔索引获取相似度分组
                         if sim_2_mask.any():
                             sim_2 = sims[sim_2_mask]
                         if sim_3_mask.any():
@@ -912,14 +1013,36 @@ if __name__ == '__main__':
                             loss_all_test.append(loss1)
                             print("loss_test:",j1,loss1,case_query)
                         j1+=1
-                        k+=1
                         sim_list.sort(key = lambda x:-x[0])
                         result[case_query]={}
+                        result_all[case_query] = {}
                         for item in sim_list:
                             result[case_query][item[1]] = item[0].item()
+                            result_all[case_query][item[1]] = item[0].item()
                         torch.cuda.empty_cache()
                         with open("./experiment/"+exp_name+"/times"+str(n)+"/"+str(epoch)+"result.json","w",encoding='utf-8')as f:
                             json.dump(result, f, ensure_ascii = False, indent = 4)
+                    
+                    for attn in attention_train:
+                        attention_train[attn] = [sum(attention_train[attn]) / len(attention_train[attn]), len(attention_train[attn]) ]
+                    for attn in attention_val:
+                        attention_val[attn] = [sum(attention_val[attn]) / len(attention_val[attn]) ,len(attention_val[attn])  ]
+                    for attn in attention_train2:
+                        attention_train2[attn] = [sum(attention_train2[attn]) / len(attention_train2[attn]), len(attention_train2[attn]) ]
+                    for attn in attention_val2:
+                        attention_val2[attn] = [sum(attention_val2[attn]) / len(attention_val2[attn]) ,len(attention_val2[attn])  ]
+                    for attn in attention_train3:
+                        attention_train3[attn] = [sum(attention_train3[attn]) / len(attention_train3[attn]), len(attention_train3[attn]) ]
+                    for attn in attention_val3:
+                        attention_val3[attn] = [sum(attention_val3[attn]) / len(attention_val3[attn]) ,len(attention_val3[attn])  ]
+                    print(attention_train)
+                    print(attention_val)
+                    print(attention_train2)
+                    print(attention_val2)
+                    print(attention_train3)
+                    print(attention_val3)   
+
+
                     print("test_loss_all", torch.mean(torch.stack(loss_all_test)))   
                     if torch.mean(torch.stack(loss_all_test)) < loss_min:
                         loss_min = torch.mean(torch.stack(loss_all_test))

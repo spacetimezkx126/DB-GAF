@@ -64,11 +64,13 @@ parser.add_argument('--drop_mode', type = str, default = False,
                     help = 'whether to adopt drop mode')
 parser.add_argument('--drop_type', type = str, default = 'most', 
                     help = 'indicate drop type (few or most)')
-parser.add_argument('--attribute_file', type = str, default = None, 
+parser.add_argument('--attribute_file', type = str, default = "./split_files/v2_2_u.json", 
                     help = 'attribute filtering result')
 parser.add_argument('--mode', type = str, default = 'test', 
                     help = 'Specifies the mode of operation (train, test)')
-parser.add_argument('--checkpoint', type = str, default = './checkpoints/only_pe_no_droptrain_val.pth', 
+parser.add_argument('--checkpoint', type = str, default = './checkpoints/v2_in_2_u.pth', 
+                    help = 'load the checkpoint for testing')
+parser.add_argument('--test_out_file', type = str, default = './results/result.json', 
                     help = 'load the checkpoint for testing')
 parser.add_argument('--retrain_times', type = str, default = 10, 
                     help = 'training times')
@@ -247,6 +249,9 @@ def compute_edge_weights(edge_type_list):
     edge_weights = torch.tensor([edge_weights_dict[etype] for etype in edge_type_list], dtype=torch.float32)
 
     return edge_weights
+
+
+
 class EAGATv2_EFWF(MessagePassing):
     r"""The EAGATv2-EFWF operator is an extension of the GATv2 operator from the "How Attentive are Graph Attention
     Networks?" <https://arxiv.org/abs/2105.14491>_ paper, which addresses the static attention issue in the
@@ -379,21 +384,12 @@ class EAGATv2_EFWF(MessagePassing):
             torch.nn.ReLU(),
             torch.nn.Linear(wg_dim, 1)
         )
-        self.mlp = nn.Sequential(
-            nn.Linear(2 * out_channels, out_channels),
-            nn.ReLU(),
-            nn.Linear(out_channels, 1)
-        )
         self.reset_parameters()
         
     def reset_parameters(self):
         super().reset_parameters()
         self.lin_l.reset_parameters()
         self.lin_r.reset_parameters()
-        # self.weight_generator.reset_parameters()
-        for layer in self.weight_generator:
-            if isinstance(layer, torch.nn.Linear):
-                layer.reset_parameters()
         if self.lin_edge is not None:
             self.lin_edge.reset_parameters()
         if self.res is not None:
@@ -406,7 +402,6 @@ class EAGATv2_EFWF(MessagePassing):
         x: Union[Tensor, PairTensor],
         edge_index: Adj,
         edge_attr: OptTensor = None,
-        edge_type:  Optional = None,
         return_attention_weights: Optional[bool] = None,
         edge_weight: OptTensor = None,
     ) -> Union[
@@ -417,7 +412,6 @@ class EAGATv2_EFWF(MessagePassing):
         H, C = self.heads, self.out_channels
 
         res: Optional[Tensor] = None
-
         x_l: OptTensor = None
         x_r: OptTensor = None
         if isinstance(x, Tensor):
@@ -444,7 +438,6 @@ class EAGATv2_EFWF(MessagePassing):
 
         assert x_l is not None
         assert x_r is not None
-
         if self.add_self_loops:
             if isinstance(edge_index, Tensor):
                 num_nodes = x_l.size(0)
@@ -464,10 +457,10 @@ class EAGATv2_EFWF(MessagePassing):
                         "simultaneously is currently not yet supported for "
                         "'edge_index' in a 'SparseTensor' form")
 
-        alpha,edge_relation_weight = self.edge_updater(edge_index, x=(x_l, x_r), edge_attr=edge_attr,edge_type=edge_type)
+        alpha,edge_attr1 = self.edge_updater(edge_index, x=(x_l, x_r), edge_attr=edge_attr)
         edge_attr = edge_attr.unsqueeze(1)
 
-        out = self.propagate(edge_index, x=(x_l, x_r), alpha=alpha, edge_attr=edge_attr, edge_relation_weight= edge_relation_weight)
+        out = self.propagate(edge_index, x=(x_l, x_r), alpha=alpha, edge_attr=edge_attr)
         if self.concat:
             out = out.view(-1, self.heads * self.out_channels)
         else:
@@ -490,8 +483,8 @@ class EAGATv2_EFWF(MessagePassing):
             return out
 
     def edge_update(self, x_j: Tensor, x_i: Tensor, edge_attr: OptTensor,
-                    index: Tensor, ptr: OptTensor, dim_size: Optional[int], edge_type: OptTensor,
-                    edge_weight: OptTensor = None) -> Tensor:
+                    index: Tensor, ptr: OptTensor, dim_size: Optional[int],
+                    edge_weight: OptTensor = None,change_weight: OptTensor = None) -> Tensor:
         x = x_i + x_j
         if edge_attr is not None:
             if edge_attr.dim() == 1:
@@ -499,61 +492,25 @@ class EAGATv2_EFWF(MessagePassing):
             assert self.lin_edge is not None
             edge_attr = self.lin_edge(edge_attr)
             edge_attr = edge_attr.view(-1, self.heads, self.out_channels)
-            # x = x + edge_attr
-           
- 
-
-        edge_relation_weight = torch.zeros(len(x)).to(device)
-        if edge_type is not None:
-            mask = torch.tensor(
-                [len(et.split("_")) == 3 for et in edge_type], device=x.device
-            )
-            selected_edges = torch.nonzero(mask).squeeze(-1)
-            # 按 target 结点分组
-            unique_targets = torch.unique(index[selected_edges])
-            for target in unique_targets:
-                mask_target = index[selected_edges] == target
-                target_edges = selected_edges[mask_target]
-                
-                if len(target_edges) > 1:
-                    edge_selected = (x)[target_edges].squeeze(1)  # shape: (num_edges, out_channels)
-                    # print(x_selected.shape)
-                    num_edges = len(target_edges)
-                    relation_scores = torch.mm(edge_selected, edge_selected.T)
-                    # pairwise_features = torch.cat([
-                    #     edge_selected.unsqueeze(1).expand(-1, num_edges, -1),  # (num_edges, num_edges, out_channels)
-                    #     edge_selected.unsqueeze(0).expand(num_edges, -1, -1)  # (num_edges, num_edges, out_channels)
-                    # ], dim=-1)  # shape: (num_edges, num_edges, 2 * out_channels)
-                    # # print(pairwise_features.shape)
-                    # relation_scores = self.mlp(pairwise_features)  # shape: (num_edges, num_edges, 1)
-                    # relation_scores = relation_scores.squeeze(-1)  # shape: (num_edges, num_edges)
-                    # print(relation_scores.shape)
-                    relation_weights = relation_scores.sum(dim=-1) / num_edges  # shape: (num_edges,)
-                    edge_relation_weight[target_edges] += relation_weights
-        from collections import Counter
-
-        edge_weights = compute_edge_weights(edge_type)
-
+            x = x + edge_attr
+            
         x = F.leaky_relu(x, self.negative_slope)
-
         alpha = (x * self.att).sum(dim=-1)
-        # alpha = F.leaky_relu(alpha, self.negative_slope)
+
         alpha = softmax(alpha, index, ptr, dim_size)
         alpha = F.dropout(alpha, p=self.dropout, training=self.training)
-        return alpha, edge_weights
+        return alpha,edge_attr
 
-    def message(self, x_j: Tensor, alpha: Tensor,edge_attr: Tensor, edge_relation_weight: Tensor) -> Tensor:
+    def message(self, x_j: Tensor, alpha: Tensor,edge_attr: Tensor) -> Tensor:
         if edge_attr is not None:
             weights = self.weight_generator(x_j+edge_attr)
             weights = F.sigmoid(weights)
-            
-            x_j_weighted = edge_attr * weights + x_j
+            x_j_weighted = edge_attr*weights+x_j
         return x_j_weighted * alpha.unsqueeze(-1)
 
     def __repr__(self) -> str:
         return (f'{self.__class__.__name__}({self.in_channels}, '
                 f'{self.out_channels}, heads={self.heads})')
-
 
 class GATv2Conv(MessagePassing):
     r"""The GATv2 operator from the "How Attentive are Graph Attention
@@ -771,7 +728,6 @@ class GATv2Conv(MessagePassing):
 
         if res is not None:
             out = out + res
-        # print(self.bias.shape,out.shape)
         if self.bias is not None:
             out = out + self.bias
 
@@ -1088,10 +1044,10 @@ class GATConv(MessagePassing):
 class CaseDataset(Dataset):
     def __init__(self, data, dataset = 'lecard', part_few = 'None'):
         self.data_list = data
-        self.device = torch.device("cuda:0")
-        # with open("./dataset/lecardv2_1.pkl",'rb')as f:
-        with open('./dataset/lecardv2_in_u_2.pkl', 'rb') as f:
-            self.cached_data = pkl.load(f)
+        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        # with open("./lecardv2_in_u_2.pkl",'rb')as f:
+        # # with open('./lecardv2_in_u_2.pkl', 'rb') as f:
+        #     self.cached_data = pkl.load(f)
         if dataset == 'lecard':
             origin_text_dir = "./dataset/processed_text/lecard/"
         elif dataset == 'lecardv2':
@@ -1118,11 +1074,14 @@ class CaseDataset(Dataset):
                 texts_content += self.data_doc[key][crime].split("：")[-1]
             texts.append(texts_content)
             self.fulltext[key] = texts_content
-        # with open(part_few,"r",encoding='utf-8')as f:
-        #     self.part_few = json.load(f)
-        #     f.close()
-        # self.cached_data = []
-        # self.cache_all_data()
+        if part_few is not None:
+            with open(part_few,"r",encoding='utf-8')as f:
+                self.part_few = json.load(f)
+                f.close()
+        else:
+            self.part_few = None
+        self.cached_data = []
+        self.cache_all_data()
     def __len__(self):
         return len(self.data_list)
 
@@ -1140,10 +1099,9 @@ class CaseDataset(Dataset):
             data.crime_name = [merged_graph[u][v]["crime_name"] for u, v in merged_graph.edges]
             data.drop = [merged_graph[u][v]["part"] for u, v in merged_graph.edges]
             self.cached_data.append(data)
-        # save_to_pkl(self.cached_data, 'lecardv2_in_u_2.pkl')
+        save_to_pkl(self.cached_data, 'lecardv2_in_u_2.pkl')
     def __getitem__(self, idx):
         data = self.cached_data[idx]
-        # print(data.edge_type)
         data = data.to(self.device)
         return data
 
@@ -1185,12 +1143,8 @@ class CaseDataset(Dataset):
                         for cont in content:
                             if not str(cont).startswith("未提及") and not str(cont).startswith("未明确"):
                                 if self.part_few is not None:
-                                    # print(self.part_few)
-                                    print(crime_name, section)
                                     if crime_name in self.part_few:
-                                        
                                         if f"{section}" in self.part_few[crime_name]:
-                                            print("1127**",section_node)
                                             G.add_node(section_node, **default_node_attributes, node_type="attribute", case_number = case['案件编号'], name = cont)
                                             drop = 0
                                             if crime_name in self.part_few:
@@ -1202,7 +1156,6 @@ class CaseDataset(Dataset):
                                             G.add_edge(crime_node, section_node, edge_type=f"has_{crime_name}_{section}", crime_name = crime_name, part = drop)
                                             G.nodes[section_node]["texts"] = str(cont)
                                     else:
-                                        print("1139**",section_node)
                                         G.add_node(section_node, **default_node_attributes, node_type="attribute", case_number = case['案件编号'], name = cont)
                                         drop = 0
                                         if crime_name in self.part_few:
@@ -1218,7 +1171,6 @@ class CaseDataset(Dataset):
                         cont = content
                         if self.part_few is not None:
                             if crime_name in self.part_few:
-                                print("1155**",section_node)
                                 if f"{section}" in self.part_few[crime_name]:
                                     G.add_node(section_node, **default_node_attributes, node_type = "attribute", case_number = case['案件编号'], name = cont)
                                     drop = 0
@@ -1231,7 +1183,6 @@ class CaseDataset(Dataset):
                                     G.add_edge(crime_node, section_node, edge_type = f"has_{crime_name}_{section}", crime_name = crime_name, part = drop)
                                     G.nodes[section_node]["texts"] = str(cont)
                         else:
-                            print("1168**",section_node)
                             G.add_node(section_node, **default_node_attributes, node_type = "attribute", case_number = case['案件编号'], name = cont)
                             drop = 0
                             if crime_name in self.part_few:
@@ -1274,12 +1225,16 @@ class Basic_Graph_Model(nn.Module):
         elif model_type == 'CaseGNN':
             self.graph_model = CaseGNN(in_channels, hidden_channels, out_channels, dropout = 0.0, num_heads = 1)
         elif model_type == 'EAGATv2':
-            self.graph_model_l1 = EAGATv2_EFWF(in_channels, hidden_channels, heads = 1, edge_dim = 768, wg_dim = 384)
+            self.graph_model_l1 = EAGATv2_EFWF(in_channels, hidden_channels, heads = 1, edge_dim = 768, wg_dim = 356)
             self.graph_model_l2 = EAGATv2_EFWF(in_channels, hidden_channels, heads = 1, edge_dim = 768, wg_dim = 64)
 
     def forward(self, data, drop_mode = False, drop_type = 'few'):
         x, edge_index, edge_attr, crime_name, drop, node_text = data.x, data.edge_index, data.edge_attr, data.crime_name, data.drop, data.name
         edge_type = data.edge_type
+        # source_name = [node_text[idx] for idx in edge_index[1].tolist()]
+        # reserve_mask = torch.tensor(
+        #     [(not str(name).startswith("未提及") and not str(name).startswith("未明确")) for name in source_name]
+        # )
         drop = torch.tensor(drop)
         if drop_mode == True:
             if drop_type == 'few':
@@ -1290,15 +1245,15 @@ class Basic_Graph_Model(nn.Module):
                 raise NotImplementedError
         else:
             mask = (drop == 0) | (drop == 1) | (drop == 2)
+        # mask = mask & reserve_mask
         crime_name = [relation for relation, mas in zip(crime_name, mask) if mas]
         mask = mask.to(device)
-        filtered_edge_index = edge_index[: , mask]  # 只保留对应的 edge_index
-        filtered_edge_attr = edge_attr[mask]  # 只保留对应的 edge_attr
+        filtered_edge_index = edge_index[: , mask] 
+        filtered_edge_attr = edge_attr[mask]  
         
         if self.model_type != 'CaseGNN':
-            x1, (adj, alpha)  = self.graph_model_l1(x, filtered_edge_index, edge_attr = filtered_edge_attr, edge_type = edge_type, return_attention_weights=True)
-            x2, (adj, alpha1) = self.graph_model_l2(x1, filtered_edge_index, edge_attr = filtered_edge_attr, edge_type = edge_type, return_attention_weights=True)
-            
+            x1, (adj, alpha)  = self.graph_model_l1(x, filtered_edge_index, edge_attr = filtered_edge_attr, return_attention_weights=True)
+            x2, (adj, alpha1) = self.graph_model_l2(x1, filtered_edge_index, edge_attr = filtered_edge_attr, return_attention_weights=True)
             x2 = F.relu(x1 + x2)
             return x2
         elif self.model_type == 'CaseGNN':
@@ -1321,9 +1276,6 @@ def margin_ranking_loss(real_scores, fake_scores, margin=0.1):
     return loss
 
 def ranking_loss_with_metrics(ranking_results, rels, k=3, margin=0.1):
-    """
-    结合MAP、NDCG和Precision@k来构造损失函数
-    """
     
     # NDCG
     def NDCG_at_k(ranking_results, rels, k):
@@ -1392,14 +1344,11 @@ def ranking_loss_with_metrics(ranking_results, rels, k=3, margin=0.1):
         Precision_k /= (len(ranking_results.keys()) - count)
         return Precision_k
 
-    # 计算各个指标
     NDCG = NDCG_at_k(ranking_results, rels, k)
     MAP_score = MAP(ranking_results, rels)
     Precision_score = Precision_at_k(ranking_results, rels, k)
-    # print(NDCG,MAP_score,Precision_score,ranking_results)
     NDCG1 = NDCG_at_k(ranking_results, rels, 5)
     NDCG2 = NDCG_at_k(ranking_results, rels, 10)
-    # 定义损失（较高的NDCG和MAP，较低的Precision都应该增加损失）
     loss = (1 - NDCG) + (1 - MAP_score) + (1 - Precision_score) + (1-NDCG1) + (1-NDCG2)
     return loss
 
@@ -1504,7 +1453,6 @@ if __name__ == '__main__':
                         sim_other_mask = ~sim_2_mask
                         sim_other2_mask = ~sim_3_mask
 
-                        # 使用布尔索引获取相似度分组
                         if sim_2_mask.any():
                             sim_2 = sims[sim_2_mask]
                         if sim_3_mask.any():
@@ -1579,29 +1527,23 @@ if __name__ == '__main__':
                             sim_list1 = []
                             sims = F.cosine_similarity(out_temp.unsqueeze(0), torch.stack(out1), dim=1)
 
-                            # 初始化结果列表
                             sim_list = []
                             sim_2 = []
                             sim_3 = []
                             sim_other = []
                             sim_other2 = []
 
-                            # 获取标签
                             unique_case_labels = torch.tensor([label[case_query].get(case, 0) for case in unique_cases], device=sims.device)
 
-                            # 根据标签分类
                             sim_list1 = sims.tolist()  # 转为列表方便后续处理
                             for i, sim in enumerate(sims):
                                 sim_entry = [sim, unique_cases[i], unique_case_labels[i].item()]
                                 sim_list.append(sim_entry)
-
-                            # 筛选符合条件的相似度
                             sim_2_mask = unique_case_labels >= 2
                             sim_3_mask = unique_case_labels == 3
                             sim_other_mask = ~sim_2_mask
                             sim_other2_mask = ~sim_3_mask
 
-                            # 使用布尔索引获取相似度分组
                             if sim_2_mask.any():
                                 sim_2 = sims[sim_2_mask]
                             if sim_3_mask.any():
@@ -1620,7 +1562,6 @@ if __name__ == '__main__':
                                 map1[key] = []
                                 del_val = []
                                 for vals in data_json[key]:
-                                    # print(key,vals)
                                     if key in label and vals not in label[key]:
                                         del_val.append(vals)
                                     map1[key].append(int(vals))
@@ -1645,20 +1586,24 @@ if __name__ == '__main__':
                             torch.save(model, "./checkpoints/"+exp_name+".pth") 
                 
         else:
+            assert os.path.exists(args.checkpoint), f"Checkpoint file {args.checkpoint} not found!"
+            assert os.path.exists(args.attribute_file), f"attribute_file {args.attribute_file} not found!"
             result_all = {}
-            model = torch.load("/home/zhaokx/DB-GAF/checkpoints/eagatv2_drop.pth")
+            model = torch.load(args.checkpoint)
             model.to(device)
             k = 0
-            with open("/home/zhaokx/DB-GAF/split_files/v2_2_u.json","r",encoding='utf-8')as f:
-                model.unstable = json.load(f)
-                f.close()
+            if args.drop_mode == True:
+                with open(args.attribute_file,"r",encoding='utf-8')as f:
+                    model.unstable = json.load(f)
+                    f.close()
+            
             with torch.no_grad():
                 for batch in val_loader:
                     sim_list = []
                     model.eval()
                     data = batch[0]
                     data = data.to(device)
-                    out = model(data)
+                    out = model(data, drop_mode = args.drop_mode, drop_type = args.drop_type)
                     out_temp = out[0].unsqueeze(0)
                     case_numbers = data.case_number 
                     case_query = case_numbers[0]
@@ -1687,62 +1632,9 @@ if __name__ == '__main__':
                     for item in sim_list:
                         result_all[case_query][item[1]] = item[0].item()
                     k+=1
-                    print(k)
-                    # break
-                with open("result"+".json","w",encoding='utf-8')as f:
+                with open(args.test_out_file,"w",encoding='utf-8')as f:
                     json.dump(result_all,f,ensure_ascii=False, indent=4)
-            checkpoint = torch.load("/home/zhaokx/DB-GAF/checkpoints/v2_in_2_l_pe_train_val.pth")
-            rename_mapping = {
-                "gat1.att":"graph_model_l1.att",
-                "gat1.bias":"graph_model_l1.bias",
-                "gat1.lin_l.weight": "graph_model_l1.lin_l.weight",
-                "gat1.lin_l.bias": "graph_model_l1.lin_l.bias",
-                "gat1.lin_r.weight": "graph_model_l1.lin_r.weight",
-                "gat1.lin_r.bias": "graph_model_l1.lin_r.bias",
-                "gat1.lin_edge.weight": "graph_model_l1.lin_edge.weight",
-                "gat1.edge_encode.weight":"graph_model_l1.edge_encode.weight",
-                "gat1.edge_encode.bias":"graph_model_l1.edge_encode.bias",
-                "gat1.weight.weight":"graph_model_l1.weight.weight",
-                "gat1.weight.bias":"graph_model_l1.weight.bias",
-                "gat1.output_proj.weight":"graph_model_l1.output_proj.weight",
-                "gat1.output_proj.bias":"graph_model_l1.output_proj.bias",
-                "gat1.weight_generator.0.weight":"graph_model_l1.weight_generator.0.weight",
-                "gat1.weight_generator.0.bias":"graph_model_l1.weight_generator.0.bias",
-                "gat1.weight_generator.2.weight":"graph_model_l1.weight_generator.2.weight",
-                "gat1.weight_generator.2.bias":"graph_model_l1.weight_generator.2.bias",
-                
-                "gat4.att":"graph_model_l2.att",
-                "gat4.bias":"graph_model_l2.bias",
-                "gat4.lin_l.weight": "graph_model_l2.lin_l.weight",
-                "gat4.lin_l.bias": "graph_model_l2.lin_l.bias",
-                "gat4.lin_r.weight": "graph_model_l2.lin_r.weight",
-                "gat4.lin_r.bias": "graph_model_l2.lin_r.bias",
-                "gat4.lin_edge.weight": "graph_model_l2.lin_edge.weight",
-                "gat4.edge_encode.weight":"graph_model_l2.edge_encode.weight",
-                "gat4.edge_encode.bias":"graph_model_l2.edge_encode.bias",
-                "gat4.weight.weight":"graph_model_l2.weight.weight",
-                "gat4.weight.bias":"graph_model_l2.weight.bias",
-                "gat4.output_proj.weight":"graph_model_l2.output_proj.weight",
-                "gat4.output_proj.bias":"graph_model_l2.output_proj.bias",
-                "gat4.weight_generator.0.weight":"graph_model_l2.weight_generator.0.weight",
-                "gat4.weight_generator.0.bias":"graph_model_l2.weight_generator.0.bias",
-                "gat4.weight_generator.2.weight":"graph_model_l2.weight_generator.2.weight",
-                "gat4.weight_generator.2.bias":"graph_model_l2.weight_generator.2.bias",
-               
-            }
-            fields_to_remove = []
-            new_state_dict = {}
-            model = Basic_Graph_Model(in_channels=768, hidden_channels=768, out_channels=768, model_type = args.model)
-            for old_key, value in checkpoint.named_parameters():
-                print(old_key)
-                if old_key in fields_to_remove:
-                    continue  # 直接跳过不需要的字段
-                new_key = rename_mapping.get(old_key, old_key)  # 如果有映射关系就重命名，否则保持原键名
-                new_state_dict[new_key] = value
-                if new_key in model.state_dict():
-                    print(new_key,'1677')
-                    model.state_dict()[new_key].copy_(value.data)
-            torch.save(model,"./checkpoints/eagatv2_drop.pth") 
+          
     elif args.dataset == 'lecard':
         if args.fold == 0:  
             train_test_v1 = {"train": train_test["lecard"]["fold0_train"], "test": train_test["lecard"]["fold0_test"]} 
@@ -1802,7 +1694,7 @@ if __name__ == '__main__':
 
                         unique_case_labels = torch.tensor([label[case_query].get(case, 0) for case in unique_cases], device=sims.device)
 
-                        sim_list1 = sims.tolist()  # 转为列表方便后续处理
+                        sim_list1 = sims.tolist()
                         for i, sim in enumerate(sims):
                             sim_entry = [sim, unique_cases[i], unique_case_labels[i].item()]
                             sim_list.append(sim_entry)
@@ -1812,7 +1704,6 @@ if __name__ == '__main__':
                         sim_other_mask = ~sim_2_mask
                         sim_other2_mask = ~sim_3_mask
 
-                        # 使用布尔索引获取相似度分组
                         if sim_2_mask.any():
                             sim_2 = sims[sim_2_mask]
                         if sim_3_mask.any():
@@ -1883,29 +1774,28 @@ if __name__ == '__main__':
                             sim_list1 = []
                             sims = F.cosine_similarity(out_temp.unsqueeze(0), torch.stack(out1), dim=1)
 
-                            # 初始化结果列表
+
                             sim_list = []
                             sim_2 = []
                             sim_3 = []
                             sim_other = []
                             sim_other2 = []
 
-                            # 获取标签
                             unique_case_labels = torch.tensor([label[case_query].get(case, 0) for case in unique_cases], device=sims.device)
 
-                            # 根据标签分类
-                            sim_list1 = sims.tolist()  # 转为列表方便后续处理
+ 
+                            sim_list1 = sims.tolist()  
                             for i, sim in enumerate(sims):
                                 sim_entry = [sim, unique_cases[i], unique_case_labels[i].item()]
                                 sim_list.append(sim_entry)
 
-                            # 筛选符合条件的相似度
+      
                             sim_2_mask = unique_case_labels >= 2
                             sim_3_mask = unique_case_labels == 3
                             sim_other_mask = ~sim_2_mask
                             sim_other2_mask = ~sim_3_mask
 
-                            # 使用布尔索引获取相似度分组
+
                             if sim_2_mask.any():
                                 sim_2 = sims[sim_2_mask]
                             if sim_3_mask.any():
@@ -1922,7 +1812,7 @@ if __name__ == '__main__':
                                 map1[key] = []
                                 del_val = []
                                 for vals in data_json[key]:
-                                    # print(key,vals)
+
                                     if key in label_dic and vals not in label_dic[key]:
                                         del_val.append(vals)
                                     map1[key].append(int(vals))
@@ -2006,7 +1896,7 @@ if __name__ == '__main__':
 
                         unique_case_labels = torch.tensor([label[case_query].get(case, 0) for case in unique_cases], device=sims.device)
 
-                        sim_list1 = sims.tolist()  # 转为列表方便后续处理
+                        sim_list1 = sims.tolist()  
                         for i, sim in enumerate(sims):
                             sim_entry = [sim, unique_cases[i], unique_case_labels[i].item()]
                             sim_list.append(sim_entry)
@@ -2016,7 +1906,7 @@ if __name__ == '__main__':
                         sim_other_mask = ~sim_2_mask
                         sim_other2_mask = ~sim_3_mask
 
-                        # 使用布尔索引获取相似度分组
+            
                         if sim_2_mask.any():
                             sim_2 = sims[sim_2_mask]
                         if sim_3_mask.any():
@@ -2087,29 +1977,25 @@ if __name__ == '__main__':
                             sim_list1 = []
                             sims = F.cosine_similarity(out_temp.unsqueeze(0), torch.stack(out1), dim=1)
 
-                            # 初始化结果列表
                             sim_list = []
                             sim_2 = []
                             sim_3 = []
                             sim_other = []
                             sim_other2 = []
 
-                            # 获取标签
+    
                             unique_case_labels = torch.tensor([label[case_query].get(case, 0) for case in unique_cases], device=sims.device)
 
-                            # 根据标签分类
-                            sim_list1 = sims.tolist()  # 转为列表方便后续处理
+                            sim_list1 = sims.tolist()  
                             for i, sim in enumerate(sims):
                                 sim_entry = [sim, unique_cases[i], unique_case_labels[i].item()]
                                 sim_list.append(sim_entry)
 
-                            # 筛选符合条件的相似度
                             sim_2_mask = unique_case_labels >= 2
                             sim_3_mask = unique_case_labels == 3
                             sim_other_mask = ~sim_2_mask
                             sim_other2_mask = ~sim_3_mask
 
-                            # 使用布尔索引获取相似度分组
                             if sim_2_mask.any():
                                 sim_2 = sims[sim_2_mask]
                             if sim_3_mask.any():
@@ -2126,7 +2012,6 @@ if __name__ == '__main__':
                                 map1[key] = []
                                 del_val = []
                                 for vals in data_json[key]:
-                                    # print(key,vals)
                                     if key in label_dic and vals not in label_dic[key]:
                                         del_val.append(vals)
                                     map1[key].append(int(vals))
