@@ -20,6 +20,7 @@ The dataset includes the following directories:
 
 - lecard
 - lecardv2
+- coliee2025
 - processed_text
 
 lecard and lecardv2 contain case attribute information extracted using large models based on the data provided by Deng et al. The processed_text directory contains the original text data from Deng's work.

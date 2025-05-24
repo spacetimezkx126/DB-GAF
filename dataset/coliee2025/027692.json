@@ -1,0 +1,1660 @@
+[
+    {
+        "Case ID": "027692",
+        "Different Crime": [
+            {
+                "Crime Name": "Border Document Misrepresentation",
+                "Crime Type": "Immigration-related_Fraud_or_Misrepresentation",
+                "credibility_assessment": [
+                    "not credible",
+                    "failure to seek asylum",
+                    "lack of independent corroborating evidence"
+                ],
+                "evidence_assessment": [
+                    "insufficient or unreliable documents"
+                ],
+                "refugee_status_eligibility": [
+                    "rejected"
+                ],
+                "standard_of_review": [
+                    "reasonableness"
+                ],
+                "decision_outcome": [
+                    "application for judicial review dismissed"
+                ],
+                "misrepresentation_or_fraud": [
+                    "document misrepresentation"
+                ]
+            },
+            {
+                "Crime Name": "Failure to Seek Asylum Promptly",
+                "Crime Type": "Refugee_Claim-related_Issues",
+                "credibility_findings": [
+                    "lack of credible evidence"
+                ],
+                "procedural_fairness": [
+                    "consider all evidence and provide clear reasoning"
+                ],
+                "reasonableness_standard": [
+                    "standard of review for credibility assessments is reasonableness"
+                ],
+                "documentary_evidence": [
+                    "insufficient evidence",
+                    "submitted documents and oral testimony"
+                ],
+                "decision_outcome": [
+                    "application for judicial review dismissed"
+                ]
+            },
+            {
+                "Crime Name": "Disorderly Conduct",
+                "Crime Type": "others",
+                "credibility_findings": [
+                    "inconsistencies",
+                    "lack of corroborating evidence",
+                    "delay in seeking asylum"
+                ],
+                "decision_reasonableness": [
+                    "Board's decision was reasonable"
+                ],
+                "evidence_assessment": [
+                    "documents provided post-hearing were given low weight"
+                ],
+                "standard_of_review": [
+                    "credibility assessments reviewed under reasonableness standard",
+                    "procedural fairness issues reviewed under correctness"
+                ],
+                "refugee_status": [
+                    "claimed refugee status based on alleged persecution in Turkey and conscientious objection to military service"
+                ],
+                "procedure_followed": [
+                    "judicial review analyzed the Board's findings on credibility, evidence, and procedural fairness"
+                ],
+                "result_of_case": [
+                    "application for judicial review dismissed"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "027448",
+        "Different Crime": [
+            {
+                "Crime Name": "Refugee Status Claim",
+                "Crime Type": "Refugee_Claim-related_Issues",
+                "legal_basis": [
+                    "United Nations Convention"
+                ],
+                "risk_of_persecution": [
+                    "political opinion",
+                    "domestic abuse",
+                    "military conscription"
+                ],
+                "credibility_findings": [
+                    "inconsistencies in testimony",
+                    "unsubstantiated claims"
+                ],
+                "decision_outcome": [
+                    "denied refugee status",
+                    "judicial review dismissed"
+                ],
+                "specific_group_membership": [
+                    "opposition to military conscription",
+                    "victims of domestic abuse"
+                ],
+                "nexus_to_convention_grounds": [
+                    "political opinion"
+                ],
+                "burden_of_proof": [
+                    "well-founded fear of persecution"
+                ],
+                "evidence_assessment": [
+                    "weak claims",
+                    "lack of immediate threat"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "052325",
+        "Different Crime": [
+            {
+                "Crime Name": "Obtaining Property by Fraud",
+                "Crime Type": "Immigration-related_Fraud_or_Misrepresentation",
+                "credibility_assessment": [
+                    "inconsistencies in testimony",
+                    "psychological report",
+                    "documentation"
+                ],
+                "procedural_fairness": [
+                    "adequate consideration of psychological condition",
+                    "sufficient reasons for conclusions"
+                ],
+                "refugee_status_eligibility": [
+                    "well-founded fear of persecution",
+                    "risk to life"
+                ],
+                "decision_outcome": [
+                    "application dismissed",
+                    "RPD decision upheld"
+                ],
+                "standard_of_review": [
+                    "reasonableness"
+                ]
+            },
+            {
+                "Crime Name": "Obtaining Property by Fraud",
+                "Crime Type": "Economic_Crimes_or_Fraud-related_Offenses",
+                "judicial_authority": [
+                    "Refugee Protection Division (RPD)",
+                    "Federal Court"
+                ],
+                "claim_nature": [
+                    "refugee status",
+                    "credibility assessment",
+                    "state protection claim"
+                ],
+                "applicable_statute": [
+                    "Immigration and Refugee Protection Act"
+                ],
+                "standard_of_review": [
+                    "reasonableness"
+                ],
+                "procedural_fairness": [
+                    "yes"
+                ],
+                "decision_outcome": [
+                    "dismissed"
+                ],
+                "expert_testimony": [
+                    "psychological report"
+                ],
+                "relationship_genuineness": [
+                    "inconsistencies in testimony"
+                ],
+                "risk_characterization": [
+                    "threats from terrorists"
+                ],
+                "nexus_to_convention_grounds": [
+                    "well-founded fear of persecution or risk to life"
+                ],
+                "material_misrepresentation": [
+                    "discrepancies in documentation"
+                ],
+                "humanitarian_compassionate_considerations": [
+                    "psychological condition acknowledged but not excusing all discrepancies"
+                ],
+                "appeal_outcome": [
+                    "upheld"
+                ]
+            },
+            {
+                "Crime Name": "Fraudulent Document Submission",
+                "Crime Type": "Violence-related_Crimes",
+                "credibility_findings": [
+                    "inconsistent testimonies",
+                    "discrepancies in documents",
+                    "unreliable letter from Harun Al-Rashid"
+                ],
+                "legal_basis": [
+                    "Immigration and Refugee Protection Act",
+                    "subsection 72(1) of the Immigration and Refugee Protection Act"
+                ],
+                "evidence_consideration": [
+                    "Personal Information Form (PIF)",
+                    "oral testimony",
+                    "additional documents",
+                    "lack of corroborating evidence"
+                ],
+                "risk_assessment": [
+                    "persecution by terrorists in Bangladesh"
+                ],
+                "reasonableness_of_decision": [
+                    "significant discrepancies",
+                    "fraudulent document submission"
+                ],
+                "refugee_status_nexus": [
+                    "failed to provide credible evidence of persecution or risk upon return"
+                ]
+            },
+            {
+                "Crime Name": "Failure to Report Crime",
+                "Crime Type": "others",
+                "credibility_findings": [
+                    "inconsistencies in testimony",
+                    "embellishments",
+                    "omissions"
+                ],
+                "state_protection": [
+                    "risk assessment",
+                    "presumption of state protection"
+                ],
+                "procedural_fairness": [
+                    "consideration of psychological condition"
+                ],
+                "evidence_assessment": [
+                    "lack of corroborating evidence",
+                    "psychological report"
+                ],
+                "decision_reasoning": [
+                    "justified credibility issues",
+                    "transparent findings"
+                ],
+                "result_of_case": [
+                    "application for judicial review dismissed"
+                ]
+            },
+            {
+                "Crime Name": "Fraudulent Document Submission",
+                "Crime Type": "Drug-related_Crimes",
+                "credibility_findings": [
+                    "negative"
+                ],
+                "evidence_sufficiency": [
+                    "insufficient"
+                ],
+                "refugee_status": [
+                    "rejected"
+                ],
+                "decision_made_by": [
+                    "Refugee Protection Division (RPD)"
+                ],
+                "applicable_law_or_regulation": [
+                    "Immigration and Refugee Protection Act"
+                ],
+                "review_process": [
+                    "judicial review under subsection 72(1) of the Immigration and Refugee Protection Act"
+                ],
+                "decision_outcome": [
+                    "application dismissed"
+                ],
+                "evidence_considered": [
+                    "inconsistent testimonies",
+                    "fraudulent documents",
+                    "unreliable letter from Harun Al-Rashid",
+                    "Personal Information Form (PIF)",
+                    "oral testimony",
+                    "additional documents"
+                ]
+            },
+            {
+                "Crime Name": "Fraudulent Document Submission",
+                "Crime Type": "Weapons_or_Explosives-related_Crimes",
+                "credibility_findings": [
+                    "inconsistent testimonies",
+                    "discrepancies in documents",
+                    "unreliable letter from Harun Al-Rashid"
+                ],
+                "evidence_considered": [
+                    "Personal Information Form (PIF)",
+                    "oral testimony",
+                    "additional documents",
+                    "lack of corroborating evidence"
+                ],
+                "decision_outcome": [
+                    "refugee protection claim rejected"
+                ],
+                "applicable_laws": [
+                    "Immigration and Refugee Protection Act"
+                ],
+                "standard_of_review": [
+                    "judicial review under subsection 72(1)"
+                ],
+                "court_ruling": [
+                    "Federal Court dismissed the application for judicial review"
+                ],
+                "refugee_protection": [
+                    "claim denied due to fraudulent documents and lack of credibility"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "009564",
+        "Different Crime": [
+            {
+                "Crime Name": "unknown",
+                "Crime Type": "others",
+                "procedural_fairness": [
+                    "breach_of_fairness",
+                    "right_to_procedural_fairness"
+                ],
+                "legal_basis": [
+                    "s_14_Canadian_Charter_of_Rights_and_Freedoms"
+                ],
+                "evidence_assessment": [
+                    "errors_in_interpretation",
+                    "impact_on_credibility_findings"
+                ],
+                "decision_reasoning": [
+                    "minor_errors",
+                    "unrelated_to_key_findings"
+                ],
+                "result_of_case": [
+                    "application_dismissed"
+                ],
+                "standard_of_review": [
+                    "judicial_review"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "054549",
+        "Different Crime": [
+            {
+                "Crime Name": "unknown",
+                "Crime Type": "others",
+                "credibility_findings": [
+                    "doubted credibility, inconsistencies, lack of evidence"
+                ],
+                "risk_of_persecution": [
+                    "fear of persecution due to political activities, fear of ex-husband"
+                ],
+                "decision_reasoning": [
+                    "independent grounds for denying protection, changed circumstances"
+                ],
+                "applicable_regulations": [
+                    "Sections 96 and 97 of the Immigration and Refugee Protection Act"
+                ],
+                "result_of_case": [
+                    "application dismissed, Board's decision upheld"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "034055",
+        "Different Crime": [
+            {
+                "Crime Name": "Refugee Status Denial",
+                "Crime Type": "Refugee_Claim-related_Issues",
+                "legal_basis": [
+                    "Immigration and Refugee Protection Act",
+                    "sections 96 and 97"
+                ],
+                "credibility_findings": [
+                    "inconsistent explanations",
+                    "lack of credible evidence"
+                ],
+                "documentary_evidence": [
+                    "failed to support allegations of persecution"
+                ],
+                "reasonableness_standard": [
+                    "Board's decision was reasonable"
+                ],
+                "decision_outcome": [
+                    "application for judicial review dismissed",
+                    "no refugee status granted"
+                ],
+                "burden_of_proof": [
+                    "applicant must prove Convention refugee or in need of protection"
+                ],
+                "evidence_assessment": [
+                    "inadequate proof of claims"
+                ],
+                "specific_group_membership": [
+                    "Alevi",
+                    "conscientious objector"
+                ],
+                "risk_of_persecution": [
+                    "claimed but not substantiated"
+                ],
+                "standard_of_proof": [
+                    "sufficient evidence required"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "011311",
+        "Different Crime": [
+            {
+                "Crime Name": "unknown",
+                "Crime Type": "others",
+                "refugee_status": [
+                    "Convention Refugee",
+                    "persecution in Israel",
+                    "religion",
+                    "military service"
+                ],
+                "applicable_regulations": [
+                    "Immigration Act",
+                    "refugee status requires proof of persecution"
+                ],
+                "decision_reasoning": [
+                    "administrative decisions must materially affect outcomes to warrant reversal",
+                    "faced discrimination as a Russian immigrant",
+                    "received state support",
+                    "military service alone does not constitute persecution",
+                    "no evidence shows Israeli military activity violated international standards",
+                    "applicant did not object to service as a conscientious objector"
+                ],
+                "conclusion_outcome": [
+                    "application for refugee status is dismissed",
+                    "no errors by the Board would change the outcome"
+                ],
+                "cause_of_action": [
+                    "claimed refugee status in Canada",
+                    "alleged persecution in Israel",
+                    "based on religion and mandatory military service"
+                ],
+                "procedure_followed": [
+                    "judicial review assessed whether the Board's decision was legally sound",
+                    "certification of a legal question was warranted"
+                ],
+                "result_of_case": [
+                    "application dismissed",
+                    "no serious question of general importance certified"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "058709",
+        "Different Crime": [
+            {
+                "Crime Name": "Unknown (domestic violence pattern)",
+                "Crime Type": "Violence-related_Crimes",
+                "child_best_interests": [
+                    "considered Consent Order",
+                    "other factors affecting children"
+                ],
+                "procedural_fairness": [
+                    "interpreter's errors minor",
+                    "no impact on outcome",
+                    "fluent counsel",
+                    "failed to object during hearing"
+                ],
+                "humanitarian_compassionate_grounds": [
+                    "refusal to stay removal order"
+                ],
+                "reasonableness_of_decision": [
+                    "reviewed for reasonableness",
+                    "upholding IAD's decision"
+                ],
+                "availability_of_alternative_remedies": [
+                    "judicial review analyzed decision-making process"
+                ]
+            },
+            {
+                "Crime Name": "Breach of probation",
+                "Crime Type": "others",
+                "best_interests_of_children": [
+                    "considered but prioritized public safety"
+                ],
+                "procedural_fairness": [
+                    "upheld despite minor translation issues"
+                ],
+                "decision_reasonableness": [
+                    "deemed adequate and reasonable"
+                ],
+                "evidence_consideration": [
+                    "criminal record, lack of rehabilitation, impact on children"
+                ],
+                "review_process": [
+                    "judicial review analyzed IAD’s decision-making process, evidence weight, and procedural fairness"
+                ],
+                "result_of_case": [
+                    "application for judicial review dismissed; no serious question certified"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "039144",
+        "Different Crime": [
+            {
+                "Crime Name": "Desertion/Draft-Evasion",
+                "Crime Type": "Human_Rights_or_International_Law_Violations",
+                "refugee_definition": [
+                    "refusal to perform military service"
+                ],
+                "persecution_grounds": [
+                    "conscientious objection",
+                    "fear of persecution for draft evasion"
+                ],
+                "burden_of_proof": [
+                    "association with persecuted groups",
+                    "illegitimate military actions under international standards"
+                ],
+                "reasonableness_of_decision": [
+                    "punishment deemed reasonable",
+                    "prison conditions acceptable"
+                ],
+                "judicial_review_process": [
+                    "Board reviewed evidence",
+                    "assessed penalties",
+                    "concluded no persecution or risk to life"
+                ],
+                "decision_outcome": [
+                    "does not qualify as a Convention refugee",
+                    "application for judicial review dismissed"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "040257",
+        "Different Crime": [
+            {
+                "Crime Name": "Misrepresentation under Immigration and Refugee Protection Act",
+                "Crime Type": "Immigration-related_Fraud_or_Misrepresentation",
+                "legal_basis": [
+                    "Immigration and Refugee Protection Act"
+                ],
+                "credibility_assessment": [
+                    "contradictions with a newspaper article",
+                    "lack of supporting evidence",
+                    "failure to seek asylum in the U.S."
+                ],
+                "standard_of_review": [
+                    "reasonableness"
+                ],
+                "evidence_assessment": [
+                    "contradictions with a newspaper article",
+                    "lack of supporting evidence"
+                ],
+                "decision_outcome": [
+                    "refugee status denied",
+                    "judicial review dismissed"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "066987",
+        "Different Crime": [
+            {
+                "Crime Name": "Refugee Status Denial",
+                "Crime Type": "Refugee_Claim-related_Issues",
+                "legal_basis": [
+                    "Canadian refugee law"
+                ],
+                "risk_of_persecution": [
+                    "religion",
+                    "nationality",
+                    "political opinion",
+                    "membership in a particular social group"
+                ],
+                "state_protection_analysis": [
+                    "failed to prove state inability to protect"
+                ],
+                "reasonableness_standard": [
+                    "decision was reasonable and not capricious"
+                ],
+                "documentary_evidence": [],
+                "specific_group_membership": [
+                    "religion",
+                    "nationality"
+                ],
+                "evidence_assessment": [
+                    "faced discrimination",
+                    "school bullying",
+                    "stoning",
+                    "military service objections"
+                ],
+                "decision_outcome": [
+                    "Application dismissed"
+                ],
+                "burden_of_proof": [
+                    "no well-founded fear of persecution established"
+                ],
+                "inconsistencies_in_testimony": [],
+                "cumulative_persecution_effects": [],
+                "changed_country_conditions": [],
+                "social_group_membership": [
+                    "religion",
+                    "nationality"
+                ],
+                "personalized_risk_evaluation": [
+                    "perceived persecution in Israel"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "099262",
+        "Different Crime": [
+            {
+                "Crime Name": "Refugee Claim Rejection",
+                "Crime Type": "Refugee_Claim-related_Issues",
+                "legal_basis": [
+                    "Immigration and Refugee Protection Act (IRPA)",
+                    "principles of persecution under international law"
+                ],
+                "credibility_findings": [
+                    "lacked credibility",
+                    "objective evidence",
+                    "plausibility"
+                ],
+                "risk_of_persecution": [
+                    "no discrimination",
+                    "no disproportionate punishment under Turkish law"
+                ],
+                "decision_outcome": [
+                    "application for judicial review dismissed",
+                    "Board's decision upheld"
+                ],
+                "reasonableness_standard": [
+                    "Board's decision was reasonable"
+                ],
+                "specific_group_membership": [
+                    "religious beliefs",
+                    "conscientious objection to military service"
+                ],
+                "evidence_assessment": [
+                    "lacked objective evidence"
+                ],
+                "nexus_to_convention_grounds": [
+                    "not established"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "037533",
+        "Different Crime": [
+            {
+                "Crime Name": "unknown",
+                "Crime Type": "others",
+                "legal_basis": [
+                    "IRPA paragraph 159(1)(h)"
+                ],
+                "procedural_fairness": [
+                    "Guideline 7's impact on questioning order",
+                    "discretion to vary questioning order"
+                ],
+                "charter_rights": [
+                    "natural justice",
+                    "fundamental justice"
+                ],
+                "decision_reasoning": [
+                    "case-by-case assessment for procedural fairness",
+                    "no inherent violation of natural or fundamental justice"
+                ],
+                "application_details": [
+                    "judicial review applications",
+                    "concerns over potential bias in refugee hearings"
+                ],
+                "procedure_followed": [
+                    "multiple applicants challenged Guideline 7 through consolidated judicial reviews"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "011646",
+        "Different Crime": [
+            {
+                "Crime Name": "Marriage Fraud",
+                "Crime Type": "Immigration-related_Fraud_or_Misrepresentation",
+                "procedural_fairness": [
+                    "no breach of procedural fairness occurred"
+                ],
+                "evidence_assessment": [
+                    "CAIPS notes were trustworthy"
+                ],
+                "decision_outcome": [
+                    "Application for judicial review dismissed",
+                    "Court upheld IAD decision, dismissing the application for judicial review"
+                ],
+                "misrepresentation_or_fraud": [
+                    "suspected marriage fraud"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "025901",
+        "Different Crime": [
+            {
+                "Crime Name": "Intellectual Property Infringement",
+                "Crime Type": "Drug-related_Crimes",
+                "legal_basis": [
+                    "Patent Act"
+                ],
+                "evidence_sufficiency": [
+                    "expert testimonies",
+                    "analysis of prior art",
+                    "evaluation of inventive ingenuity"
+                ],
+                "decision_outcome": [
+                    "validity upheld",
+                    "infringement found"
+                ],
+                "applicable_law_or_regulation": [
+                    "'old' Patent Act"
+                ],
+                "consequences_of_decision": [
+                    "damages",
+                    "pre/post-judgment interest",
+                    "delayed injunction"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "047285",
+        "Different Crime": [
+            {
+                "Crime Name": "Refugee Protection Claim",
+                "Crime Type": "Refugee_Claim-related_Issues",
+                "credibility_findings": [
+                    "unreasonable credibility finding",
+                    "inconsistencies in testimony"
+                ],
+                "procedural_fairness": [
+                    "insufficient reasons"
+                ],
+                "reasonableness_standard": [
+                    "reasonable credibility assessment"
+                ],
+                "risk_of_persecution": [
+                    "fear of persecution by political rivals"
+                ],
+                "decision_outcome": [
+                    "application for judicial review dismissed",
+                    "RPD's decision upheld"
+                ],
+                "burden_of_proof": [
+                    "adequate reasons provided by RPD"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "069976",
+        "Different Crime": [
+            {
+                "Crime Name": "Pre-removal risk assessment denial",
+                "Crime Type": "Immigration-related_Fraud_or_Misrepresentation",
+                "legal_basis": [
+                    "IRPA s. 113(a)"
+                ],
+                "evidence_assessment": [
+                    "letters, complaint, country conditions predated RPD decision",
+                    "failed to address personal circumstances"
+                ],
+                "refugee_status_eligibility": [
+                    "claimed refugee status due to perceived LTTE ties but lacked credible evidence post-RPD decision"
+                ],
+                "decision_outcome": [
+                    "Federal Court dismissed the judicial review application, upholding the PRRA Officer's decision"
+                ],
+                "standard_of_review": [
+                    "PRRA Officer properly applied s. 113(a)"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "071286",
+        "Different Crime": [
+            {
+                "Crime Name": "Immigration Application Dispute",
+                "Crime Type": "Immigration-related_Fraud_or_Misrepresentation",
+                "refugee_status_eligibility": [
+                    "not qualified for Canadian permanent resident visas as members of the country of asylum class"
+                ],
+                "risk_assessment": [
+                    "fear of returning to Afghanistan due to instability"
+                ],
+                "state_protection_analysis": [
+                    "Kabul relatively stable"
+                ],
+                "legal_basis": [
+                    "Immigration and Refugee Protection Act & Regulations"
+                ],
+                "decision_outcome": [
+                    "application for judicial review dismissed"
+                ],
+                "procedural_fairness": [
+                    "visa officer's decision was reasonable under the applicable regulations"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "031877",
+        "Different Crime": [
+            {
+                "Crime Name": "Engaging in Terrorism",
+                "Crime Type": "Economic_Crimes_or_Fraud-related_Offenses",
+                "legal_basis": [
+                    "s. 80(1) of the Immigration and Refugee Protection Act (IRPA)"
+                ],
+                "decision_outcome": [
+                    "security certificate is reasonable"
+                ],
+                "procedural_fairness": [
+                    "judicial determinations ensured compliance with procedural fairness and constitutional rights"
+                ],
+                "evidence_provided": [
+                    "Interpol notice linking to terrorist activities",
+                    "communications with known terrorists",
+                    "travel patterns consistent with extremist profiles"
+                ],
+                "applicable_statute": [
+                    "Immigration and Refugee Protection Act (IRPA)"
+                ],
+                "judicial_authority": [
+                    "a judge must determine if a security certificate is reasonable based on available information and evidence"
+                ],
+                "serious_criminality": [
+                    "engaged in terrorism or were members of a terrorist organization"
+                ],
+                "risk_characterization": [
+                    "involvement in terrorism"
+                ],
+                "specific_targeting": [
+                    "Al Jihad and acted as a communicator between terrorist cells"
+                ],
+                "nexus_to_convention_grounds": [
+                    "deemed inadmissible due to involvement in terrorism"
+                ],
+                "public_interest": [
+                    "cannot be deported to any country where he faces torture or death"
+                ]
+            },
+            {
+                "Crime Name": "Acts of Violence Endangering Lives or Safety of Persons",
+                "Crime Type": "Violence-related_Crimes",
+                "security_certificate": [
+                    "reasonable under s. 80(1) of IRPA"
+                ],
+                "evidence_consideration": [
+                    "phone records linking to known terrorists",
+                    "Interpol notice identifying as a member of a terrorist group"
+                ],
+                "complicity_in_crimes": [
+                    "ties to terrorist organizations",
+                    "affiliation with Al Jihad"
+                ],
+                "risk_assessment": [
+                    "substantial risk of torture, death, or cruel treatment"
+                ],
+                "legal_basis": [
+                    "s. 80(1) of the Immigration and Refugee Protection Act (IRPA)",
+                    "s. 7 of the Canadian Charter of Rights and Freedoms"
+                ],
+                "reasonableness_of_decision": [
+                    "upheld as reasonable"
+                ],
+                "availability_of_alternative_remedies": [
+                    "deportation restricted to countries without severe human rights violations"
+                ]
+            },
+            {
+                "Crime Name": "Espionage",
+                "Crime Type": "Terrorism_or_National_Security-related_Crimes",
+                "legal_basis": [
+                    "s. 80(1) of the Immigration and Refugee Protection Act (IRPA)"
+                ],
+                "evidence_credibility": [
+                    "some inconsistencies"
+                ],
+                "membership_in_organization": [
+                    "Al Jihad",
+                    "Al Qaeda"
+                ],
+                "risk_to_national_security": [
+                    "involvement in terrorism and security risks"
+                ],
+                "reasonableness_of_decision": [
+                    "reasonable grounds to believe"
+                ],
+                "admissibility_criteria": [
+                    "inadmissible due to security concerns"
+                ],
+                "specific_actions_or_activities": [
+                    "acted as a communication link between terrorist cells"
+                ],
+                "decision_outcome": [
+                    "upheld the security certificate as reasonable"
+                ],
+                "court_ruling": [
+                    "prohibited deportation to countries where Jaballah would face torture"
+                ]
+            },
+            {
+                "Crime Name": "Non-Refoulement Violation",
+                "Crime Type": "Human_Rights_or_International_Law_Violations",
+                "legal_basis": [
+                    "IRPA",
+                    "Canadian Charter of Rights and Freedoms Section 7"
+                ],
+                "human_rights_violations": [
+                    "substantial risk of torture",
+                    "cruel and unusual treatment",
+                    "death"
+                ],
+                "national_security_concerns": [
+                    "ties with terrorist organizations"
+                ],
+                "charter_rights_violation": [
+                    "principles of fundamental justice"
+                ],
+                "reasonableness_of_decision": [
+                    "security certificate is reasonable"
+                ],
+                "decision_outcome": [
+                    "upheld the security certificate",
+                    "prohibited deportation to countries where Jaballah would face torture or death"
+                ],
+                "judicial_review_process": [
+                    "multiple judicial reviews",
+                    "assessments of new evidence",
+                    "considerations of constitutional issues"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "052084",
+        "Different Crime": [
+            {
+                "Crime Name": "Immigration-related Offense",
+                "Crime Type": "Immigration-related_Fraud_or_Misrepresentation",
+                "standard_of_review": [
+                    "Section 82.1(5) of the Immigration Act"
+                ],
+                "procedural_fairness": [
+                    "violating procedural rules"
+                ],
+                "decision_outcome": [
+                    "motion dismissed"
+                ],
+                "regulatory_compliance": [
+                    "failed to provide sufficient details",
+                    "improper procedure"
+                ],
+                "misrepresentation_or_fraud": [
+                    "relied on a solicitor's affidavit instead of personal testimony"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "098576",
+        "Different Crime": [
+            {
+                "Crime Name": "Refugee Protection Claim",
+                "Crime Type": "Refugee_Claim-related_Issues",
+                "compelling_reasons_exception": [
+                    "s. 108(4) of IRPA"
+                ],
+                "changed_circumstances": [
+                    "found by the Board"
+                ],
+                "past_persecution": [
+                    " Applicant's testimony corroborated"
+                ],
+                "legal_basis": [
+                    "s. 108(4) of IRPA",
+                    "s. 108(1)(e) of IRPA"
+                ],
+                "decision_outcome": [
+                    "judicial review allowed",
+                    "case referred back for reconsideration"
+                ],
+                "burden_of_proof": [
+                    "prima facie evidence of past persecution met"
+                ],
+                "review_standard": [
+                    "Federal Court reviewed under s. 108(4) of IRPA"
+                ],
+                "risk_personalization": [
+                    "based on past persecution in Sri Lanka"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "069763",
+        "Different Crime": [
+            {
+                "Crime Name": "Administrative Law Violation",
+                "Crime Type": "Economic_Crimes_or_Fraud-related_Offenses",
+                "legal_basis": [
+                    "Rule 1602(3) of the Federal Court Rules",
+                    "Section 35(6) of the Canadian Environmental Assessment Act"
+                ],
+                "decision_outcome": [
+                    "Panel members remained as respondents"
+                ],
+                "procedural_fairness": [
+                    "motions to strike panel members as respondents",
+                    "requests for interim orders"
+                ],
+                "applicable_statute": [
+                    "Canadian Environmental Assessment Act"
+                ],
+                "judicial_authority": [
+                    "Federal Court Rules"
+                ],
+                "cause_of_action": [
+                    "challenged the appointment of an environmental assessment panel"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "066347",
+        "Different Crime": [
+            {
+                "Crime Name": "Failure to disclose criminal history in permanent resident application",
+                "Crime Type": "Immigration-related_Fraud_or_Misrepresentation",
+                "legal_basis": [
+                    "IRPA s.65"
+                ],
+                "family_class_considerations": [
+                    "assessment of family class membership",
+                    "sponsor validity"
+                ],
+                "decision_outcome": [
+                    "Removal Order",
+                    "judicial review dismissed"
+                ],
+                "misrepresentation_or_fraud": [
+                    "concealed criminal history"
+                ],
+                "procedural_fairness": [
+                    "IAD interpretation of IRPA s.65"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "044060",
+        "Different Crime": [
+            {
+                "Crime Name": "Refugee Status Determination",
+                "Crime Type": "Refugee_Claim-related_Issues",
+                "state_protection_analysis": [
+                    "insufficient evidence of lack of state protection",
+                    "presumed state protection unless rebutted by clear evidence"
+                ],
+                "legal_basis": [
+                    "Immigration and Refugee Protection Act"
+                ],
+                "decision_outcome": [
+                    "Decision quashed; case remanded for reconsideration"
+                ],
+                "risk_of_persecution": [
+                    "faced threats and assaults from a group he criticized"
+                ],
+                "specific_group_membership": [
+                    "homosexual Mexican citizen"
+                ],
+                "evidence_assessment": [
+                    "failure to address contradictory evidence"
+                ],
+                "burden_of_proof": [
+                    "claimants must prove inability or unwillingness of their home country to protect them"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "048203",
+        "Different Crime": [
+            {
+                "Crime Name": "unknown",
+                "Crime Type": "others",
+                "legal_basis": [
+                    "Immigration and Refugee Protection Act",
+                    "subsection 25(1)"
+                ],
+                "decision_reasoning": [
+                    "Officer underestimated establishment",
+                    "reasonably considered children's best interests"
+                ],
+                "humanitarian_and_compassionate_considerations": [
+                    "establishment in Canada",
+                    "best interests of children"
+                ],
+                "standard_of_review": [
+                    "reasonableness for establishment",
+                    "correctness for reasons' adequacy"
+                ],
+                "application_details": [
+                    "judicial review in Federal Court"
+                ],
+                "result_of_case": [
+                    "decision quashed",
+                    "case remitted for re-determination"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "059973",
+        "Different Crime": [
+            {
+                "Crime Name": "Citizenship Residency Requirement Violation",
+                "Crime Type": "Immigration-related_Fraud_or_Misrepresentation",
+                "residency_requirements": [
+                    "s. 5(1)(c) of the Citizenship Act",
+                    "three years of residence in Canada within four years",
+                    "absences due to business and education"
+                ],
+                "procedural_fairness": [
+                    "lacked critical analysis",
+                    "breached natural justice"
+                ],
+                "decision_outcome": [
+                    "Appeal granted",
+                    "entitled to citizenship"
+                ],
+                "immigration_status": [
+                    "citizenship applications denied",
+                    "awarded Canadian citizenship"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "039860",
+        "Different Crime": [
+            {
+                "Crime Name": "Refugee Status Denial",
+                "Crime Type": "Refugee_Claim-related_Issues",
+                "credibility_findings": [
+                    "discrepancies in testimony",
+                    "evasion during questioning",
+                    "inconsistent statements about threats",
+                    "failure to seek asylum in the U.S."
+                ],
+                "evidence_assessment": [
+                    "discounted documentary evidence",
+                    "perceived lack of credibility"
+                ],
+                "reasonableness_standard": [
+                    "credibility findings were unreasonable",
+                    "ignored explanations provided by applicants",
+                    "overly relied on failure to claim asylum in the U.S."
+                ],
+                "decision_outcome": [
+                    "application for judicial review granted",
+                    "RPD's decision quashed",
+                    "matter referred back for reevaluation"
+                ],
+                "legal_basis": [
+                    "IRPA sections 96 and 97",
+                    "well-founded fear of persecution",
+                    "risk to life due to race, religion, nationality, social group, or political opinion"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "053401",
+        "Different Crime": [
+            {
+                "Crime Name": "Humanitarian and Compassionate (H&C) Grounds Application Rejection",
+                "Crime Type": "Drug-related_Crimes",
+                "humanitarian_compassionate_grounds": [
+                    "medical_condition",
+                    "undue_hardship",
+                    "specialized_medical_care"
+                ],
+                "applicable_law_or_regulation": [
+                    "Immigration and Refugee Protection Act (IRPA)"
+                ],
+                "evidence_considered": [
+                    "brain_injury",
+                    "Aphasia",
+                    "medical_care_unavailability"
+                ],
+                "decision_outcome": [
+                    "judicial_review_granted",
+                    "decision_set_aside",
+                    "reassessment_required"
+                ],
+                "decision_made_by": [
+                    "PRRA_Officer",
+                    "court"
+                ],
+                "review_process": [
+                    "judicial_review"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "020051",
+        "Different Crime": [
+            {
+                "Crime Name": "unknown",
+                "Crime Type": "others",
+                "legal_basis": [
+                    "Section 45 of the National Defence Act",
+                    "Charter's freedom of press"
+                ],
+                "procedural_fairness": [
+                    "closed military inquiry",
+                    "internal administrative inquiry without dispositive powers"
+                ],
+                "decision_reasoning": [
+                    "Board investigates fires and casualties",
+                    "does not impose penalties",
+                    "not performing judicial or quasi-judicial functions"
+                ],
+                "standard_of_review": [
+                    "judicial review of Commodore Murphy's decision"
+                ],
+                "conclusion_outcome": [
+                    "Application for judicial review dismissed",
+                    "closed-door policy upheld as lawful"
+                ],
+                "relevant_statute": [
+                    "National Defence Act"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "011486",
+        "Different Crime": [
+            {
+                "Crime Name": "Overstaying visa",
+                "Crime Type": "Immigration-related_Fraud_or_Misrepresentation",
+                "best_interests_of_children": [
+                    "children's short-term welfare",
+                    "irreparable harm",
+                    "Canadian-born children"
+                ],
+                "decision_outcome": [
+                    "stay of removal"
+                ],
+                "legal_basis": [
+                    "IRPA s. 48",
+                    "Convention on the Rights of the Child"
+                ],
+                "family_class_considerations": [
+                    "removal of a parent",
+                    "Canadian-born children",
+                    "precarious care"
+                ],
+                "procedural_fairness": [
+                    "limited discretion",
+                    "adequately consider"
+                ],
+                "humanitarian_and_compassionate_factors": [
+                    "short-term child welfare",
+                    "serious issue",
+                    "balance of convenience"
+                ]
+            },
+            {
+                "Crime Name": "Failure to comply with reporting conditions",
+                "Crime Type": "others",
+                "best_interests_of_children": [
+                    "best interests of children involved",
+                    "children's best interests"
+                ],
+                "decision_reasoning": [
+                    "removal officer did not adequately consider the children's best interests",
+                    "constituting irreparable harm"
+                ],
+                "application_details": [
+                    "applicant failed to comply with reporting conditions and resisted removal attempts"
+                ],
+                "relevant_statute": [
+                    "IRPA s. 48"
+                ],
+                "procedure_followed": [
+                    "Judicial review application and motion for stay of removal were filed"
+                ],
+                "result_of_case": [
+                    "Removal was stayed pending full assessment of children's best interests or judicial review outcome"
+                ],
+                "cause_of_action": [
+                    "Applicant's failure to comply with reporting conditions and removal attempts, coupled with concerns for her children's welfare"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "099591",
+        "Different Crime": [
+            {
+                "Crime Name": "Immigration Application Rejection",
+                "Crime Type": "others",
+                "legal_basis": [
+                    "subsections 76(3) and 76(4) of the Regulations"
+                ],
+                "procedural_fairness": [
+                    "failure to consider settlement funds",
+                    "improper consideration of marital status"
+                ],
+                "decision_reasoning": [
+                    "substituted judgment by Officers",
+                    "points awarded do not reflect applicant's ability to settle"
+                ],
+                "standard_of_review": [
+                    "reasonableness"
+                ],
+                "result_of_case": [
+                    "decision quashed",
+                    "case remanded for reconsideration"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "091483",
+        "Different Crime": [
+            {
+                "Crime Name": "Overstaying visa",
+                "Crime Type": "Immigration-related_Fraud_or_Misrepresentation",
+                "risk_assessment": [
+                    "ongoing persecution in India due to religious extremism"
+                ],
+                "evidence_assessment": [
+                    "father's letter dismissed as unverifiable"
+                ],
+                "procedural_fairness": [
+                    "PRRA officer considered new evidence under IRPA"
+                ],
+                "decision_outcome": [
+                    "judicial review application dismissed"
+                ],
+                "standard_of_review": [
+                    "reasonableness"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "079983",
+        "Different Crime": [
+            {
+                "Crime Name": "Immigration Application Rejection",
+                "Crime Type": "others",
+                "procedural_fairness": [
+                    "visa officer's obligation to seek clarifications"
+                ],
+                "evidence_presented": [
+                    "letter from employer",
+                    "description of duties"
+                ],
+                "decision_reasoning": [
+                    "applicant failed to provide adequate evidence"
+                ],
+                "application_details": [
+                    "skilled worker visa application"
+                ],
+                "result_of_case": [
+                    "judicial review application dismissed"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "014635",
+        "Different Crime": [
+            {
+                "Crime Name": "Administrative Error",
+                "Crime Type": "others",
+                "legal_basis": [
+                    "PAB must record decisions in writing, provide reasons if the applicant's request lacks sufficient grounds, and apply the correct test for granting leave."
+                ],
+                "procedural_fairness": [
+                    "PAB granted leave without recording the decision, providing reasons, or indicating the applied test."
+                ],
+                "decision_reasoning": [
+                    "Ms. Carroll's application lacked required details and evidence."
+                ],
+                "result_of_case": [
+                    "PAB must reconsider granting leave to appeal, ensuring proper procedures are followed."
+                ],
+                "procedure_followed": [
+                    "Judicial review analyzed PAB's compliance with legal duties regarding decision-making and documentation."
+                ],
+                "cause_of_action": [
+                    "Ms. Carroll's incomplete application and PAB's procedural errors led to judicial review."
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "008782",
+        "Different Crime": [
+            {
+                "Crime Name": "Immigration fraud through purported relationship for permanent residence.",
+                "Crime Type": "Immigration-related_Fraud_or_Misrepresentation",
+                "misrepresentation_or_fraud": [
+                    "relationship entered into primarily for acquiring status under IRPA",
+                    "not genuine"
+                ],
+                "credibility_assessment": [
+                    "inconsistencies in testimonies about cohabitation, financial support, and legal advice"
+                ],
+                "immigration_status": [
+                    "foreign national",
+                    "seeking permanent residence"
+                ],
+                "decision_outcome": [
+                    "judicial review dismissed",
+                    "IAD's decision upheld"
+                ],
+                "regulatory_compliance": [
+                    "IRPA Regulations regarding spouse, common-law partner, or conjugal partner"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "090394",
+        "Different Crime": [
+            {
+                "Crime Name": "Serious criminality under Immigration and Refugee Protection Act",
+                "Crime Type": "others",
+                "legal_basis": [
+                    "s. 64(2) of IRPA",
+                    "s. 719(3) of the Criminal Code"
+                ],
+                "application_details": [
+                    "Respondent was sentenced to three years, with credit for 30 months of pre-sentence custody"
+                ],
+                "decision_reasoning": [
+                    "Pre-sentence custody forms part of the term of imprisonment under IRPA"
+                ],
+                "conclusion_outcome": [
+                    "IAD decision set aside; case referred for redetermination; certified question confirmed."
+                ],
+                "cause_of_action": [
+                    "Respondent pleaded guilty to cocaine trafficking"
+                ],
+                "procedure_followed": [
+                    "Judicial review determined the IAD erred in excluding pre-sentence custody from the term of imprisonment"
+                ]
+            },
+            {
+                "Crime Name": "Possession of cocaine for the purposes of trafficking",
+                "Crime Type": "Drug-related_Crimes",
+                "legal_basis": [
+                    "IRPA s. 64(2)",
+                    "Criminal Code s. 719(3)"
+                ],
+                "serious_criminality": [
+                    "crime punished by at least two years' imprisonment"
+                ],
+                "decision_outcome": [
+                    "IAD's decision overturned",
+                    "case remitted for rehearing",
+                    "certified question on pre-sentence custody"
+                ],
+                "applicable_law_or_regulation": [
+                    "IRPA"
+                ],
+                "decision_made_by": [
+                    "Immigration and Refugee Board (IAD)",
+                    "court"
+                ],
+                "review_process": [
+                    "judicial review"
+                ],
+                "consequences_of_decision": [
+                    "redetermination required"
+                ],
+                "criminal_history": [
+                    "guilty to drug trafficking"
+                ],
+                "immigration_status": [
+                    "faced deportation due to inadmissibility"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "049096",
+        "Different Crime": [
+            {
+                "Crime Name": "unknown",
+                "Crime Type": "others",
+                "legal_basis": [
+                    "s. 14.02(4) of the BIA"
+                ],
+                "relevant_statute": [
+                    "BIA"
+                ],
+                "standard_of_review": [
+                    "statutory interpretation principles"
+                ],
+                "decision_reasoning": [
+                    "term 'shall' is directory if it serves public duty, causes minimal prejudice, and lacks penalties for non-compliance"
+                ],
+                "result_of_case": [
+                    "judicial review dismissed"
+                ],
+                "procedure_followed": [
+                    "Federal Court analyzed whether the delay invalidated the Superintendent's decision"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "086161",
+        "Different Crime": [
+            {
+                "Crime Name": "Possibly Border document misrepresentation",
+                "Crime Type": "Immigration-related_Fraud_or_Misrepresentation",
+                "best_interests_of_children": [
+                    "Officer improperly applied a 'disproportionate hardship' test",
+                    "ignored key evidence like psychological reports"
+                ],
+                "humanitarian_and_compassionate_factors": [
+                    "Applicant sought humanitarian exemption based on family ties and children's interests"
+                ],
+                "decision_outcome": [
+                    "The decision is quashed, and the case is remanded for reconsideration"
+                ],
+                "standard_of_review": [
+                    "reasonableness standard"
+                ],
+                "criminality_inadmissibility": [
+                    "Applicant re-entered Canada without proper authorization after deportation"
+                ],
+                "evidence_assessment": [
+                    "Officer ignored relevant evidence"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "008855",
+        "Different Crime": [
+            {
+                "Crime Name": "Immigration Fraud",
+                "Crime Type": "Immigration-related_Fraud_or_Misrepresentation",
+                "credibility_assessment": [
+                    "contradictions in testimony",
+                    "lack of corroborative evidence",
+                    "communication issues"
+                ],
+                "evidence_assessment": [
+                    "unreasonable findings challenged"
+                ],
+                "decision_outcome": [
+                    "application for judicial review dismissed"
+                ],
+                "standard_of_review": [
+                    "reasonableness"
+                ],
+                "misrepresentation_or_fraud": [
+                    "doubts about marriage authenticity"
+                ]
+            },
+            {
+                "Crime Name": "Immigration Fraud",
+                "Crime Type": "Economic_Crimes_or_Fraud-related_Offenses",
+                "relationship_genuineness": [
+                    "not genuine",
+                    "primarily for immigration purposes"
+                ],
+                "reasonableness_standard": [
+                    "reviewed on reasonableness"
+                ],
+                "evidence_provided": [
+                    "contradictions in testimony",
+                    "lack of corroborative evidence",
+                    "communication issues"
+                ],
+                "judicial_authority": [
+                    "IAD",
+                    "Federal Court"
+                ],
+                "appeal_outcome": [
+                    "dismissed"
+                ],
+                "cause_of_action": [
+                    "rejection of sponsorship application"
+                ],
+                "procedural_fairness": [
+                    "judicial review of IAD decision"
+                ]
+            }
+        ]
+    },
+    {
+        "Case ID": "026200",
+        "Different Crime": [
+            {
+                "Crime Name": "unknown",
+                "Crime Type": "others",
+                "credibility_findings": [
+                    "not credible",
+                    "patently unreasonable",
+                    "lack sufficient reasoning"
+                ],
+                "evidence_assessment": [
+                    "rejected key documents",
+                    "AEUP letter",
+                    "university letter",
+                    "police report",
+                    "Hiwote's age and cultural background"
+                ],
+                "decision_reasoning": [
+                    "cumulative errors",
+                    "redetermination"
+                ],
+                "refugee_status": [
+                    "political persecution",
+                    "ethnic targeting"
+                ],
+                "procedure_followed": [
+                    "judicial review application",
+                    "IRPA section 72(1)"
+                ],
+                "result_of_case": [
+                    "court allowed judicial review",
+                    "set aside Board's decision",
+                    "remit case for reconsideration"
+                ]
+            }
+        ]
+    }
+]

@@ -1357,9 +1357,12 @@ if __name__ == '__main__':
     if args.dataset == 'lecardv2':
         label_json = "./labels/labelv2.json"
         dataset_dir = "./dataset/lecardv2"
-    else:
+    elif args.dataset == 'lecard':
         label_json = "./labels/labelv1.json"
         dataset_dir = "./dataset/lecard"
+    else:
+        label_json = "./labels/label_coliee2025.json"
+        dataset_dir = "./dataset/coliee2025"    
     
     with open(label_json,"r",encoding='utf-8')as f:
         label = json.load(f)
@@ -2034,6 +2037,257 @@ if __name__ == '__main__':
                         if torch.mean(torch.stack(loss_all_test))<loss_min:
                             loss_min = torch.mean(torch.stack(loss_all_test))
                             torch.save(model,"./checkpoints/"+exp_name+"_fold1.pth") 
+    elif args.dataset == 'coliee2025':
+        train_test_v2 = {"train": train_test["coliee2025"]["train"],"test": train_test["coliee2025"]["test"]}
+        part_few = args.attribute_file
+        train_loader, val_loader = load_data_coliee(datas, train_test_v2, part_few = part_few)
+        if mode != 'test':
+            for n in range(times):
+                print("times:",n)
+                model = Basic_Graph_Model(in_channels=768, hidden_channels=768, out_channels=768, model_type = args.model)
+                model.to(device)
+                
+                optimizer = optim.RAdam(filter(lambda p: p.requires_grad, model.parameters()), lr=0.00001)
+                if not os.path.exists("./experiment/"+exp_name):
+                    os.mkdir("./experiment/"+exp_name) 
+                if not os.path.exists("./experiment/"+exp_name+"/times"+str(n)):
+                    os.mkdir("./experiment/"+exp_name+"/times"+str(n)) 
+                loss_all_train = []
+                loss_all_test = []
+                for epoch in range(epochs):
+                    print("epoch:",epoch)
+                    model.train()
+                    j1 = 0
+                    k = 0
+                    for batch in train_loader:
+                        map1 = {}
+                        sim_list = []
+                        sim_list1 = []
+                        total_loss = 0
+                        temp = None
+                        out_temp = None
+                        optimizer.zero_grad()
+                        
+                        sim_3 = []
+                        sim_other = []
+
+                        data = batch[0]
+                        out = model(data)
+                        case_numbers = data.case_number 
+                        case_query = case_numbers[0]
+                        
+                        out_temp = out[0]
+                        case_numbers1 = list(filter(lambda x: x != case_query, case_numbers))
+                        unique_cases = list(set(case_numbers1)) 
+                        first_indices = []
+                        for i in range(len(unique_cases)):
+                            for j in range(len(case_numbers)):
+                                if case_numbers[j] == unique_cases[i] and data.node_type[j] =="case":
+                                    first_indices.append(j)
+                                    break
+                        first_node_features = torch.stack([out[i] for i in first_indices])
+                        out1 = first_node_features
+                        sims = F.cosine_similarity(out_temp.unsqueeze(0), out1, dim=1)
+
+                        sim_list = []
+                        sim_2 = []
+                        sim_3 = []
+                        sim_other = []
+                        sim_other2 = []
+
+                        unique_case_labels = torch.tensor([label[case_query].get(case, 0) for case in unique_cases], device=sims.device)
+
+                        sim_list1 = sims.tolist()
+                        for i, sim in enumerate(sims):
+                            sim_entry = [sim, unique_cases[i], unique_case_labels[i].item()]
+                            sim_list.append(sim_entry)
+
+                        sim_2_mask = unique_case_labels == 3
+                        sim_3_mask = unique_case_labels == 3
+                        sim_other_mask = ~sim_2_mask
+                        sim_other2_mask = ~sim_3_mask
+
+                        if sim_2_mask.any():
+                            sim_2 = sims[sim_2_mask]
+                        if sim_3_mask.any():
+                            sim_3 = sims[sim_3_mask]
+                        if sim_other_mask.any():
+                            sim_other = sims[sim_other_mask]
+                        if sim_other2_mask.any():
+                            sim_other2 = sims[sim_other2_mask]
+                        j1 += 1
+                        k += 1
+                        loss = 0
+                        result = {}
+                        sim_list.sort(key = lambda x : -x[0])
+                        result[case_query]={}
+                        for item in sim_list:
+                            result[case_query][item[1]] = item[0].item()
+                            data_json = result
+                        for key in data_json:
+                            map1[key] = []
+                            del_val = []
+                            for vals in data_json[key]:
+                                if key in label and vals not in label[key]:
+                                    del_val.append(vals)
+                                map1[key].append(int(vals))
+                            for vals in del_val:
+                                data_json[key].pop(vals)
+                        
+                        if len(sim_2)!=0 and len(sim_other)!=0:
+                            # print(data_json)
+                            loss = margin_ranking_loss(sim_2,sim_other)+ranking_loss_with_metrics(data_json,label)
+                            loss.backward()
+                            # print("loss_train:",j1,loss,case_query)
+                            loss_all_train.append(loss)
+                        sim_list.sort(key = lambda x:-x[0])
+                        optimizer.step()
+                        torch.cuda.empty_cache()
+                    
+                    print("train_loss_all",torch.mean(torch.stack(loss_all_train)))
+                    print("val")
+                    del out
+                    model.eval()
+                    loss_min = torch.tensor(10000).to(device)
+                    j1 = 0
+                    result = {}
+                    with torch.no_grad():
+                        for batch in val_loader:
+                            result1 = {}
+                            
+                            map1 = {}
+                            sim_list = []
+                            sim_list1 = []
+                            sim_3 = []
+                            sim_other2 = []
+                            total_loss = 0
+                            temp = None
+                            out_temp = None
+                            data = batch[0]
+                            out = model(data)
+                            case_numbers = data.case_number 
+                            case_query = case_numbers[0]
+                            out_temp = out[0]
+                            case_numbers1 = list(filter(lambda x: x != case_query, case_numbers))
+                            unique_cases = list(set(case_numbers1)) 
+                            first_indices =[]
+                            for i in range(len(unique_cases)):
+                                for j in range(len(case_numbers)):
+                                    if case_numbers[j] == unique_cases[i] and data.node_type[j] =="case":
+                                        first_indices.append(j)
+                                        break
+                            first_node_features = [out[i] for i in first_indices]
+                            out1 = first_node_features
+                            sim_list1 = []
+                            sims = F.cosine_similarity(out_temp.unsqueeze(0), torch.stack(out1), dim=1)
+
+                            sim_list = []
+                            sim_2 = []
+                            sim_3 = []
+                            sim_other = []
+                            sim_other2 = []
+
+                            unique_case_labels = torch.tensor([label[case_query].get(case, 0) for case in unique_cases], device=sims.device)
+
+                            sim_list1 = sims.tolist()  # 转为列表方便后续处理
+                            for i, sim in enumerate(sims):
+                                sim_entry = [sim, unique_cases[i], unique_case_labels[i].item()]
+                                sim_list.append(sim_entry)
+                            sim_2_mask = unique_case_labels == 3
+                            sim_3_mask = unique_case_labels == 3
+                            sim_other_mask = ~sim_2_mask
+                            sim_other2_mask = ~sim_3_mask
+
+                            if sim_2_mask.any():
+                                sim_2 = sims[sim_2_mask]
+                            if sim_3_mask.any():
+                                sim_3 = sims[sim_3_mask]
+                            if sim_other_mask.any():
+                                sim_other = sims[sim_other_mask]
+                            if sim_other2_mask.any():
+                                sim_other2 = sims[sim_other2_mask]
+                            sim_list.sort(key = lambda x:-x[0])
+                            result1[case_query]={}
+                            for item in sim_list:
+                                result1[case_query][item[1]] = item[0].item()
+                                data_json = result1
+                            
+                            for key in data_json:
+                                map1[key] = []
+                                del_val = []
+                                for vals in data_json[key]:
+                                    if key in label and vals not in label[key]:
+                                        del_val.append(vals)
+                                    map1[key].append(int(vals))
+                                for vals in del_val:
+                                    data_json[key].pop(vals)
+                            if len(sim_2)!=0 and len(sim_other)!=0:
+                                loss1 = margin_ranking_loss(sim_2, sim_other) + ranking_loss_with_metrics(data_json, label)
+                                loss_all_test.append(loss1)
+                                # print("loss_test:",j1,loss1,case_query)
+                            j1+=1
+                            k+=1
+                            sim_list.sort(key = lambda x:-x[0])
+                            result[case_query]={}
+                            for item in sim_list:
+                                result[case_query][item[1]] = item[0].item()
+                            torch.cuda.empty_cache()
+                            with open("./experiment/"+exp_name+"/times"+str(n)+"/"+str(epoch)+"result.json","w",encoding='utf-8')as f:
+                                json.dump(result, f, ensure_ascii = False, indent = 4)
+                        print("test_loss_all", torch.mean(torch.stack(loss_all_test)))   
+                        if torch.mean(torch.stack(loss_all_test)) < loss_min:
+                            loss_min = torch.mean(torch.stack(loss_all_test))
+                            torch.save(model, "./checkpoints/"+exp_name+".pth")
+        else:
+            assert os.path.exists(args.checkpoint), f"Checkpoint file {args.checkpoint} not found!"
+            assert os.path.exists(args.attribute_file), f"attribute_file {args.attribute_file} not found!"
+            result_all = {}
+            model = torch.load(args.checkpoint)
+            model.to(device)
+            k = 0
+            if args.drop_mode == True:
+                with open(args.attribute_file,"r",encoding='utf-8')as f:
+                    model.unstable = json.load(f)
+                    f.close()
+            
+            with torch.no_grad():
+                for batch in val_loader:
+                    sim_list = []
+                    model.eval()
+                    data = batch[0]
+                    data = data.to(device)
+                    out = model(data, drop_mode = args.drop_mode, drop_type = args.drop_type)
+                    out_temp = out[0].unsqueeze(0)
+                    case_numbers = data.case_number 
+                    case_query = case_numbers[0]
+                    unique_cases = []
+                    j = 0
+                    for cn in case_numbers:
+                        if data.node_type[j] =="case" and cn !=case_query:
+                            unique_cases.append(cn)
+                        j+=1
+                    first_indices =[]
+                    for i in range(len(unique_cases)):
+                        for j in range(len(case_numbers)):
+                            if case_numbers[j] == unique_cases[i] and data.node_type[j] =="case":
+                                first_indices.append(j)
+                                break
+                    first_node_features = torch.stack([out[i] for i in first_indices])
+                    out1 = first_node_features
+
+                    sims = F.cosine_similarity(out_temp, out1, dim=1)
+                    unique_case_labels = torch.tensor([label[case_query].get(case, 0) for case in unique_cases], device=sims.device)
+                    for i, sim in enumerate(sims):
+                        sim_entry = [sims[i], unique_cases[i], unique_case_labels[i].item()]
+                        sim_list.append(sim_entry)
+                    sim_list.sort(key = lambda x:-x[0])
+                    result_all[case_query]={}
+                    for item in sim_list:
+                        result_all[case_query][item[1]] = item[0].item()
+                    k+=1
+                with open(args.test_out_file,"w",encoding='utf-8')as f:
+                    json.dump(result_all,f,ensure_ascii=False, indent=4)       
+
             
 
 
