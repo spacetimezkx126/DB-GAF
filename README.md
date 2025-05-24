@@ -12,7 +12,7 @@ The graph construction method for DB-GAF and attribute filtering.
 
 ## DataSets
 
-The datasets are derived from the text data of:
+The datasets of LeCaRD and LeCaRDv2 are derived from the text data of:
 
 Deng C, Mao K, Dou Z. (2024), "Learning Interpretable Legal Case Retrieval via Knowledge-Guided Case Reformulation", Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing, pp. 1253-1265.
 
