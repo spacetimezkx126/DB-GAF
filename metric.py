@@ -78,16 +78,16 @@ def Precision_k(ranking_results, rels, k=3):
     Precision_k /= (len(ranking_results.keys()) - count)
     return Precision_k
 def load_file():
-    label_dic = json.load(open("./labels/labelv2.json","r"))
+    label_dic = json.load(open("./labels/labelv1.json","r"))
     return label_dic
 label_dic = load_file()
 
 parser = argparse.ArgumentParser(description = 'lcr')
-parser.add_argument('--exp_name', type = str, default = 'v2_in_2_u_efwf', 
+parser.add_argument('--exp_name', type = str, default = './table1/efwf_db_gaf_lecardv2', 
                     help = 'dataset_name')  
-parser.add_argument('--single_file', type = str, default = False, 
+parser.add_argument('--single_file', type = str, default = True, 
                     help = 'whether testing a single file')  
-parser.add_argument('--file', type = str, default = "./results/result.json", 
+parser.add_argument('--file', type = str, default = "./results/result_0_2.json", 
                     help = 'whether testing a single file')  
 args = parser.parse_args()
 
@@ -106,7 +106,7 @@ if __name__ == '__main__':
             best_res = None
             best_epoch = 0
             for i in range(10):
-                # print("epoch:",i)
+                # if os.path.exists("./experiment/"+exp_name+"/times"+str(n)+"/"+str(i)+"result.json"):
                 with open("./experiment/"+exp_name+"/times"+str(n)+"/"+str(i)+"result.json", "r")as f:
                     result_all = json.load(f)
                     f.close()
