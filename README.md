@@ -5,10 +5,10 @@ This repository provides the implementation of **DB-GAF**, a novel graph-based d
 
 ## Framework
 The framework composed of 4 modules for the whole paper.
-![Framework](images/framework.jpg)
+![Framework](images/framework.png)
 ## Model Architecture
 The graph construction method for DB-GAF and attribute filtering.
-![DB-GAF Architecture](images/db-gaf.jpg)
+![DB-GAF Architecture](images/db-gaf.png)
 
 ## DataSets
 
