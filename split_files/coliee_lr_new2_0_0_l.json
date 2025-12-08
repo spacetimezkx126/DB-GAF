@@ -1,0 +1,63 @@
+{
+    "Violations of Immigration Regulations": [
+        "Outcome",
+        "Legal_Provision_Cited",
+        "Decision_Making_Body",
+        "Legal_Standard_Applied",
+        "Legal_Provision_Violated"
+    ],
+    "False Statements and Immigration Fraud": [
+        "Legal_Provision_Cited",
+        "Decision_Review_Issue",
+        "Key_Factor_in_Determination",
+        "Credibility_Assessment"
+    ],
+    "Violent Crimes": [
+        "Crime_Name",
+        "Crime_Type",
+        "Governing_Law",
+        "Decision_Outcome",
+        "Procedural_Stage"
+    ],
+    "Property Crimes": [
+        "Dispute_Type",
+        "Evidence_Assessment",
+        "Decision_Outcome",
+        "Legal_Rule",
+        "Decision_Maker",
+        "Legal_Framework",
+        "Applicant_Challenge"
+    ],
+    "Organized Crime and Smuggling": [
+        "Outcome",
+        "Accusation",
+        "Judicial_Review_Outcome",
+        "Relevant_Factors_Considered",
+        "Legal_Provision_Involved"
+    ],
+    "Security Threats and Terrorism": [
+        "Process",
+        "Outcome",
+        "Judicial_Review_Outcome",
+        "Legal_Provision_Cited",
+        "Key_Evidence_Issue"
+    ],
+    "Human Rights Violations and Serious International Law Offenses": [
+        "Legal_Provision_Involved",
+        "State_Protection_Adequacy",
+        "State_Protection_Assessment",
+        "Personal_Data_Implicated"
+    ],
+    "Organized Crime": [
+        "Crime_Name",
+        "Crime_Type",
+        "Dispute_Type",
+        "Decision_Outcome"
+    ],
+    "Smuggling": [
+        "Outcome",
+        "Accusation",
+        "Crime_Name",
+        "Crime_Type"
+    ]
+}

@@ -1,0 +1,109 @@
+{
+    "Violations of Immigration Regulations": [
+        "Outcome",
+        "Legal_Provision_Cited",
+        "Decision_Making_Body",
+        "Legal_Standard_Applied",
+        "Legal_Provision_Violated",
+        "Grounds_for_Claim",
+        "Remedy_Requested",
+        "Court_Ruling",
+        "Legal_Standard",
+        "Assessment_Factor",
+        "Procedural_Issue"
+    ],
+    "False Statements and Immigration Fraud": [
+        "Legal_Provision_Cited",
+        "Decision_Review_Issue",
+        "Key_Factor_in_Determination",
+        "Credibility_Assessment",
+        "Document_Fraud",
+        "Credibility_Issues",
+        "Legal_Provision",
+        "Regulation_Cited"
+    ],
+    "Violent Crimes": [
+        "Crime_Name",
+        "Crime_Type",
+        "Governing_Law",
+        "Decision_Outcome",
+        "Procedural_Stage",
+        "Legal_Procedure",
+        "Decision_Maker",
+        "Reviewing_Body",
+        "Review_Mechanism",
+        "Legal_Framework",
+        "Risk_Assessment"
+    ],
+    "Property Crimes": [
+        "Dispute_Type",
+        "Evidence_Assessment",
+        "Decision_Outcome",
+        "Legal_Rule",
+        "Decision_Maker",
+        "Legal_Framework",
+        "Applicant_Challenge",
+        "Court_Result",
+        "Evidence_Type",
+        "Remedy_Requested",
+        "Decision_Authority",
+        "Remedy_Sought",
+        "Resolution_Mechanism",
+        "Legal_Provision",
+        "Claimant_Status"
+    ],
+    "Organized Crime and Smuggling": [
+        "Outcome",
+        "Accusation",
+        "Judicial_Review_Outcome",
+        "Relevant_Factors_Considered",
+        "Legal_Provision_Involved",
+        "Procedural_Fairness_Issue",
+        "Procedural_Fairness_Issues",
+        "Risk_Assessment_Factors",
+        "Evidence_Disclosure_Status",
+        "Charter_Section_Involved"
+    ],
+    "Security Threats and Terrorism": [
+        "Process",
+        "Outcome",
+        "Judicial_Review_Outcome",
+        "Legal_Provision_Cited",
+        "Key_Evidence_Issue",
+        "National_Security_Element",
+        "Authority_Decision_Level",
+        "National_Security_Danger",
+        "Procedural_Fairness_Issue",
+        "Institutional_Bias_Allegation"
+    ],
+    "Human Rights Violations and Serious International Law Offenses": [
+        "Legal_Provision_Involved",
+        "State_Protection_Adequacy",
+        "State_Protection_Assessment",
+        "Personal_Data_Implicated",
+        "Outcome",
+        "Jurisdiction",
+        "Credibility",
+        "Standard_of_Review"
+    ],
+    "Organized Crime": [
+        "Crime_Name",
+        "Crime_Type",
+        "Dispute_Type",
+        "Decision_Outcome",
+        "Review_Mechanism",
+        "Authority_Responsible",
+        "Legal_Provision",
+        "Assessment_Factor"
+    ],
+    "Smuggling": [
+        "Outcome",
+        "Accusation",
+        "Crime_Name",
+        "Crime_Type",
+        "Dispute_Type",
+        "Decision_Outcome",
+        "Review_Mechanism",
+        "Authority_Responsible"
+    ]
+}
