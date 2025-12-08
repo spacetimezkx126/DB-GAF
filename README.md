@@ -1,5 +1,5 @@
 
-# DB-GAF: Enhancing Legal Case Retrieval with Dual-Branch Graph Contrastive Learning and Attribute Filtering
+# DB-GAF: Enhancing Legal Case Retrieval Through Dual-Branch Graph Contrastive Learning and Attribute Filtering
 This repository provides the implementation of **DB-GAF**, a novel graph-based dual-branch framework for legal case retrieval with attribute filtering. The model leverages a graph-based approach to retrieve legal cases by considering both the graph structure of the data and the attribute filtering to improve retrieval accuracy.
 
 
